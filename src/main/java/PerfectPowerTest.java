@@ -1,5 +1,3 @@
-package com.wtt.test;
-
 /**
  * What's a Perfect Power anyway?
  *

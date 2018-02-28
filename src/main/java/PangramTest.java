@@ -1,5 +1,3 @@
-package com.wtt.test;
-
 /**
  * Detect Pangram
  *
