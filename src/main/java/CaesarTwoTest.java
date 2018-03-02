@@ -3,6 +3,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -148,10 +149,15 @@ class CaesarTwo {
         System.out.println('b' - 'a' + 'z' - 'x' + 1);
         int i = 8;
         System.out.println(-i);
-        char c = 'a';
-        int shift = -2;
-        if (c + shift < 'a') {
-            System.out.println((char) ('z' - 'a' + (c + shift) + 1));
-        }
+//        char c = 'a';
+//        int shift = -2;
+//        if (c + shift < 'a') {
+//            System.out.println((char) ('z' - 'a' + (c + shift) + 1));
+//        }
+        String str = "absfdg";
+        String res = str.chars()
+                .mapToObj(c -> (char) c)
+                .map(c -> String.valueOf(Character.toUpperCase(c))).collect(Collectors.joining());
+
     }
 }
