@@ -22,18 +22,12 @@ public class CaesarTwoTest {
         List<String> v = Arrays.asList("opP DBQUBJ", "O! nz Dbqu", "bjo! pvs g", "fbsgvm usj", "q jt epof;");
         assertEquals(v, CaesarTwo.encodeStr(u, 1));
     }
+
     @Test
     public void test3() {
         String u = "O CAPTAIN! my Captain! our fearful trip is done;";
         List<String> v = Arrays.asList("opP DBQUBJ", "O! nz Dbqu", "bjo! pvs g", "fbsgvm usj", "q jt epof;");
         assertEquals(u, CaesarTwo.decode(v));
-    }
-
-    @Test
-    public void test4() {
-        String u = "...allen cold and dead.[ ]";
-        List<String> v = Arrays.asList(".....b", "mmfo d", "pme bo", "e efbe", ".[ ]");
-        assertEquals(v, CaesarTwo.encodeStr(u, 1));
     }
 
 }
@@ -140,43 +134,64 @@ class CaesarTwo {
 //        return res.toString();
 //    }
 
+    //抛弃ASCII码数字编号，利用+和%来实现循环 %加indexOf方法完美解决了索引的问题
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
 
     public static List<String> encodeStr(String s, int shift) {
-        return null;
+        char firstLetter = Character.toLowerCase(s.charAt(0));
+        char secondLetter = LOWER.charAt((LOWER.indexOf(firstLetter) + shift) % 26);
+        return split((firstLetter + "" + secondLetter + doShift(s, shift, 1)), 5);
     }
 
     public static String decode(List<String> s) {
-        return null;
+        String res = String.join("", s);
+        int shift = res.charAt(1) - res.charAt(0);
+        if (shift < 0) shift += 26;
+        return doShift(res.substring(2), shift, -1);
     }
 
     private static List<String> split(String s, int chunk) {
-        return null;
+        int size = s.length() / chunk;
+        //size++即可保证最后一个runner是剩余最多的
+        if (s.length() % chunk != 0) size++;
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 0; i < s.length(); i += size) {
+            result.add(s.substring(i, Math.min(i + size, s.length())));
+        }
+        return result;
     }
 
     public static String doShift(String s, int shift, int direction) {
-        return null;
-    }
-
-    public static void main(String[] args) {
-//        System.out.println(rotate(' ', 2));
-//        System.out.println((int) 'z');
-//        System.out.println((int) 'Z');
-//        System.out.println(68 / 5);
-//        System.out.println(Math.floor(68 / 5));
-//        System.out.println('b' - 'a' + 'z' - 'x' + 1);
-//        int i = 8;
-//        System.out.println(-i);
-//        char c = 'a';
-//        int shift = -2;
-//        if (c + shift < 'a') {
-//            System.out.println((char) ('z' - 'a' + (c + shift) + 1));
-//        }
-        String str = "absfdg";
-        String res = str.chars()
+        return s.chars()
                 .mapToObj(c -> (char) c)
-                .map(c -> String.valueOf(Character.toUpperCase(c))).collect(Collectors.joining());
-        System.out.println(res);
+                .map(c -> {
+                    if (!Character.isLetter(c)) return String.valueOf(c);
+                    String ref = Character.isLowerCase(c) ? LOWER : UPPER;
+                    int newIndex = (ref.indexOf(c) + shift * direction) % 26;
+                    if (newIndex < 0) newIndex += 26;
+                    return String.valueOf(ref.charAt(newIndex));
+                })
+                .collect(Collectors.joining());
     }
+//    public static void main(String[] args) {
+////        System.out.println(rotate(' ', 2));
+////        System.out.println((int) 'z');
+////        System.out.println((int) 'Z');
+////        System.out.println(68 / 5);
+////        System.out.println(Math.floor(68 / 5));
+////        System.out.println('b' - 'a' + 'z' - 'x' + 1);
+////        int i = 8;
+////        System.out.println(-i);
+////        char c = 'a';
+////        int shift = -2;
+////        if (c + shift < 'a') {
+////            System.out.println((char) ('z' - 'a' + (c + shift) + 1));
+////        }
+//        String str = "absfdg";
+//        String res = str.chars()
+//                .mapToObj(c -> (char) c)
+//                .map(c -> String.valueOf(Character.toUpperCase(c))).collect(Collectors.joining());
+//        System.out.println(res);
+//    }
 }
