@@ -1,10 +1,9 @@
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
 import java.math.BigInteger;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
 
 public class SomeEgyptianFractions {
 
@@ -21,6 +20,7 @@ public class SomeEgyptianFractions {
         testing(Decomp.decompose("4", "12"), "[1/3]");
     }
 }
+
 //class Decomp {
 //
 //    public static String decompose(String nrStr, String drStr) {
@@ -46,63 +46,40 @@ public class SomeEgyptianFractions {
 //        return "";
 //    }
 //}
-class Decomp2 {
-
-    public static String decomposeAux(String nrStr, String drStr) {
-        long nr = Long.parseLong(nrStr);
-        long dr = Long.parseLong(drStr);
-        if (dr == 0 || nr == 0) {
-            return "";
-        }
-        if (dr % nr == 0)
-            return "1/" + dr / nr;
-        String res = "";
-        if (nr > dr) {
-            long q = (int)Math.floor((double)(nr / dr));
-            res += q + "";
-            if (nr % dr != 0) {
-                res += ", " + decomposeAux(Long.toString(nr % dr), Long.toString(dr));
-                return res.trim();
-            }
-            else return res.trim();
-        }
-        long n = dr / nr + 1;
-        res += "1/" + n + ", ";
-        res += decomposeAux(Long.toString(nr * n - dr), Long.toString(dr * n));
-        return res.trim();
-    }
-    public static String decompose(String nrStr, String drStr) {
-        String res = decomposeAux(nrStr, drStr);
-        return "[" + res + "]";
-    }
-}
-
 class Decomp {
     public static final BigInteger ZERO = BigInteger.ZERO;
     public static final BigInteger ONE = BigInteger.ONE;
 
     public static String decompose(String nrStr, String drStr) {
+        BigInteger nr = BigInteger.valueOf(Long.parseLong(nrStr));
+        BigInteger dr = BigInteger.valueOf(Long.parseLong(drStr));
 
-        BigInteger numer = BigInteger.valueOf(Long.parseLong(nrStr));
-        BigInteger denom = BigInteger.valueOf(Long.parseLong(drStr));
-
-        List<String> fractions = new LinkedList<>();
-        if (numer.compareTo(denom) >= 0) {
-            fractions.add(numer.divide(denom).toString());
-            numer = numer.mod(denom);
+        LinkedList<String> res = new LinkedList<>();
+        if (nr.compareTo(dr) >= 0) {
+            res.add(nr.divide(dr).toString());
+            nr = nr.mod(dr);
         }
-        while (numer.compareTo(ZERO) > 0) {
-            BigInteger next = denom.divide(numer);
-            if (denom.mod(numer).compareTo(ZERO) != 0)
+        while(nr.compareTo(ZERO) > 0) {
+            BigInteger next = dr.divide(nr);
+            if (dr.mod(nr).compareTo(ZERO) != 0) {
                 next = next.add(ONE);
-            fractions.add("1/" + next.toString());
-            numer = numer.multiply(next).subtract(denom);
-            denom = denom.multiply(next);
+            }
+            res.add("1/" + next);
+            nr = nr.multiply(next).subtract(dr);
+            dr = dr.multiply(next);
         }
-        return fractions.toString();
+        return res.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(decompose("3", "7"));
-    }
+    //3/7
+    //9/21 - 7/21
+    //4/5 5/4是1.XXX,2就是其最大因子
+    //8/10 - 5/10
+//    public static void main(String[] args) {
+//        System.out.println(decompose("3", "19"));
+//        ArrayList<String> strings = new ArrayList<>();
+//        strings.add("1");
+//        strings.add("2");
+//        System.out.println(strings.toString());
+//    }
 }
