@@ -8,32 +8,32 @@ public class ClockyMcClockFace {
 
     @Test
     public void test1200() {
-        assertEquals("12:00", Dinglemouse.whatTimeIsIt(0));
-        assertEquals("12:00", Dinglemouse.whatTimeIsIt(360));
+        assertEquals("12:00", DinglemouseClockyMcClockFace.whatTimeIsIt(0));
+        assertEquals("12:00", DinglemouseClockyMcClockFace.whatTimeIsIt(360));
     }
 
     @Test
     public void test0300() {
-        assertEquals("03:00", Dinglemouse.whatTimeIsIt(90));
+        assertEquals("03:00", DinglemouseClockyMcClockFace.whatTimeIsIt(90));
     }
 
     @Test
     public void test0600() {
-        assertEquals("06:00", Dinglemouse.whatTimeIsIt(180));
+        assertEquals("06:00", DinglemouseClockyMcClockFace.whatTimeIsIt(180));
     }
 
     @Test
     public void test0900() {
-        assertEquals("09:00", Dinglemouse.whatTimeIsIt(270));
+        assertEquals("09:00", DinglemouseClockyMcClockFace.whatTimeIsIt(270));
     }
     @Test
     public void testRandom() {
-        assertEquals("06:39", Dinglemouse.whatTimeIsIt(199.765));
-        assertEquals("12:41", Dinglemouse.whatTimeIsIt(20.6611));
+        assertEquals("06:39", DinglemouseClockyMcClockFace.whatTimeIsIt(199.765));
+        assertEquals("12:41", DinglemouseClockyMcClockFace.whatTimeIsIt(20.6611));
     }
 
 }
-class Dinglemouse {
+class DinglemouseClockyMcClockFace {
 
     public static String whatTimeIsIt(final double angle) {
         // Your code here

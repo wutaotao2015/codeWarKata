@@ -3,9 +3,7 @@ package kata; /**
  */
 
 import org.junit.Test;
-
 import java.util.*;
-
 import static org.junit.Assert.assertArrayEquals;
 
 public class ZooDisasterKata {
@@ -20,32 +18,39 @@ public class ZooDisasterKata {
                 "sheep eats grass",
                 "fox eats sheep",
                 "fox"};
-        assertArrayEquals(expected, ZooDisaster.whoEatsWho(input));
+        String[] strings = Dinglemouse.whoEatsWho(input);
+        assertArrayEquals(expected, strings);
     }
-
+    @Test
+    public void example2() {
+        final String input = "big-fish,giraffe,fox,cow,leaves,antelope,banana,banana,panda,giraffe,panda,leaves,chicken";
+        final String[] expected = 	{
+                "big-fish,giraffe,fox,cow,leaves,antelope,banana,banana,panda,giraffe,panda,leaves,chicken",
+                "panda eats leaves",
+                "big-fish,giraffe,fox,cow,leaves,antelope,banana,banana,panda,giraffe,panda,chicken"};
+        String[] strings = Dinglemouse.whoEatsWho(input);
+        assertArrayEquals(expected, strings);
+    }
+    @Test
+    public void test3(){
+        final String input = "antelope,lion";
+        final String[] expected = 	{
+                "antelope,lion",
+                "lion eats antelope",
+                "lion"};
+        String[] strings = Dinglemouse.whoEatsWho(input);
+        assertArrayEquals(expected, strings);
+    }
+/**
+ * Random Test #1: ZOO = leaves,little-fish,chicken
+ leaves,little-fish,chicken
+ Random Test #2: ZOO = antelope,lion,giraffe,giraffe,bug,little-fish,grass
+ lion eats antelope
+ lion,giraffe,giraffe,bug,little-fish,grass
+ */
 }
 
-/**
- antelope eats grass
- big-fish eats little-fish
- bug eats leaves
- bear eats big-fish
- bear eats bug
- bear eats chicken
- bear eats cow
- bear eats leaves
- bear eats sheep
- chicken eats bug
- cow eats grass
- fox eats chicken
- fox eats sheep
- giraffe eats leaves
- lion eats antelope
- lion eats cow
- panda eats leaves
- sheep eats grass
- */
-class ZooDisaster {
+class Dinglemouse {
 
     private static EatMap eatMap = new EatMap();
     static {
@@ -92,12 +97,19 @@ class ZooDisaster {
                 if (eat(animalChain, resultList, node, leftAnimalNode)) break;
                 if (eat(animalChain, resultList, node, rightAnimalNode)) break;
                 if (i == list.size() - 1) {
+                    StringBuilder sb = new StringBuilder();
+                    for (AnimalChain.Node amNode : animalChain.traverse()) {
+                        sb.append(amNode.item + ",");
+                    }
+                    String s = sb.toString();
+                    resultList.add(s.substring(0, s.length() - 1));
                     canEatExisted = false;
                 }
             }
         }
-        String[] strings = new String[zoo.length() - 1];
-        return resultList.toArray(strings);
+        String[] strings = new String[resultList.size()];
+        String[] res = resultList.toArray(strings);
+        return res;
     }
 
     private static boolean eat(AnimalChain animalChain, ArrayList<String> resultList, AnimalChain.Node node, AnimalChain.Node sideNode) {
@@ -137,18 +149,27 @@ class AnimalChain {
             tail = head;
         }else{
             Node newNode = new Node(tail, null, animal);
+            tail.right = newNode;
             tail = newNode;
         }
     }
     public void delete(Node curNode) {
 
-        Node leftNode = curNode.left;
-        Node rightNode = curNode.right;
-        if (leftNode != null) {
-            leftNode.right = rightNode;
-        }
-        if (rightNode != null) {
-            rightNode.left = leftNode;
+        if (curNode == head) {
+            head = curNode.right;
+            head.left = null;
+        }else if(curNode == tail) {
+            tail = curNode.left;
+            tail.right = null;
+        }else{
+            Node leftNode = curNode.left;
+            Node rightNode = curNode.right;
+            if (leftNode != null) {
+                leftNode.right = rightNode;
+            }
+            if (rightNode != null) {
+                rightNode.left = leftNode;
+            }
         }
     }
     public List<Node> traverse() {
@@ -187,6 +208,68 @@ class EatMap {
         }
     }
 }
+
+/**
+ * 直接对animal用list装，在while循环中控制下标的移动即可
+ *
+ * public class Dinglemouse {
+
+ private static Map<String, List<String>> whoEats = new HashMap<>();
+
+ private static void initWhoEats() {
+ whoEats.put("antelope", Arrays.asList("grass"));
+ whoEats.put("big-fish", Arrays.asList("little-fish"));
+ whoEats.put("bug", Arrays.asList("leaves"));
+ whoEats.put("bear", Arrays.asList("big-fish", "bug", "chicken", "cow", "leaves", "sheep"));
+ whoEats.put("chicken", Arrays.asList("bug"));
+ whoEats.put("cow", Arrays.asList("grass"));
+ whoEats.put("fox", Arrays.asList("chicken", "sheep"));
+ whoEats.put("giraffe", Arrays.asList("leaves"));
+ whoEats.put("lion", Arrays.asList("antelope", "cow"));
+ whoEats.put("panda", Arrays.asList("leaves"));
+ whoEats.put("sheep", Arrays.asList("grass"));
+ }
+
+ public static String[] whoEatsWho(final String zoo) {
+ initWhoEats();
+ List<String> result = new ArrayList<>();
+ result.add(zoo);
+ List<String> animals = new ArrayList<>(Arrays.asList(zoo.split(",")));
+
+ int i = 0;
+ while (i < animals.size()) {
+ if (i != 0)
+ if (canEat(animals.get(i), animals.get(i - 1))) {
+ result.add(animals.get(i) + " eats " + animals.get(i - 1));
+ animals.remove(i - 1);
+ i = 0;
+ continue;
+ }
+
+ if (i < animals.size() - 1)
+ if (canEat(animals.get(i), animals.get(i + 1))) {
+ result.add(animals.get(i) + " eats " + animals.get(i + 1));
+ animals.remove(i + 1);
+ i = 0;
+ continue;
+ }
+
+ i++;
+ }
+
+ result.add(String.join(",", animals));
+ return result.toArray(new String[result.size()]);
+ }
+
+ private static boolean canEat(String animal, String animal1) {
+ if (whoEats.containsKey(animal))
+ if (whoEats.get(animal).indexOf(animal1) != -1)
+ return true;
+ return false;
+ }
+
+ }
+ */
 
 
 
