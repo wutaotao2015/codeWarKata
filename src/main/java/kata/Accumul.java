@@ -1,3 +1,5 @@
+package kata;
+
 import java.util.ArrayList;
 import java.util.List;
 

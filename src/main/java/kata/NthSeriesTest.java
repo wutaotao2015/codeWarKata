@@ -1,10 +1,9 @@
-/**
+package kata; /**
  * Created by wutaotao
  * 2018/1/23 21:36
  */
 import static org.junit.Assert.*;
 
-import java.util.*;
 import java.util.stream.IntStream;
 
 import org.junit.Test;

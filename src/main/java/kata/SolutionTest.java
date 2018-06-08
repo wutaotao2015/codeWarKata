@@ -1,12 +1,9 @@
-/**
+package kata; /**
  * Created by wutaotao
  * 2018/1/23 22:26
  */
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import org.junit.runners.JUnit4;
-
-import java.util.HashMap;
 
 public class SolutionTest {
     @Test

@@ -1,4 +1,4 @@
-/**
+package kata; /**
  * What's a Perfect Power anyway?
  *
  * Created by wutaotao

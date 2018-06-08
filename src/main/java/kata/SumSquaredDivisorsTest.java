@@ -1,14 +1,9 @@
-/**
+package kata; /**
  * Created by wutaotao
  * 2018/1/26 22:37
  */
 
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 

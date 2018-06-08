@@ -1,11 +1,9 @@
-/**
+package kata; /**
  * Created by wutaotao
  * 2018/1/23 19:48
  */
 
 import org.junit.Test;
-
-import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 

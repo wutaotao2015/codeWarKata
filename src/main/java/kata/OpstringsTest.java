@@ -1,4 +1,4 @@
-/**
+package kata; /**
  * Moves in squared strings (I)
  *
  * Created by wutaotao

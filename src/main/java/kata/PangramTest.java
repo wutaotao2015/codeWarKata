@@ -1,4 +1,4 @@
-/**
+package kata; /**
  * Detect Pangram
  *
  * Created by wutaotao

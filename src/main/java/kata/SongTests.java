@@ -1,10 +1,9 @@
-/**
+package kata; /**
  * Created by wutaotao
  * 2018/1/26 22:00
  */
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import org.junit.runners.JUnit4;
 
 
 public class SongTests {

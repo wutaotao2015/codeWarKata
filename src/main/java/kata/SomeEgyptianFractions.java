@@ -1,3 +1,5 @@
+package kata;
+
 import org.junit.Test;
 
 import java.math.BigInteger;

@@ -1,4 +1,4 @@
-/**
+package kata; /**
  * Created by wutaotao
  * 2018/1/31 21:50
  */
@@ -6,8 +6,6 @@
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-
-import org.junit.runners.JUnit4;
 
 public class DashatizeIt {
 

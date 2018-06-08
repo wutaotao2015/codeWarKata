@@ -1,9 +1,9 @@
-/**
+package kata; /**
  * Created by wutaotao
  * 2018/2/1 21:30
  */
 import static org.junit.Assert.*;
-import java.util.Random;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
