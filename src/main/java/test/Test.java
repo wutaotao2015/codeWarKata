@@ -64,5 +64,10 @@ public class Test {
         // 只匹配了<H1>, </H1>未匹配上
         kk = str.replaceAll("<\\w+?>", "kk");
         System.out.println(kk);
+
+        String wtt = "wur, wer, wer, 234";
+        // 前面的先贪婪？
+        wtt = wtt.replaceAll("(.+), (.+)", "$1 and $2");
+        System.out.println(wtt);
     }
 }
