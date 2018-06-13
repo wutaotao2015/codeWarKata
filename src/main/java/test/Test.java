@@ -40,12 +40,29 @@ public class Test {
                 {'w', 'h', 's'}
         };
 
-        for (char[] triplet : triplets) {
-            System.out.println(Arrays.toString(triplet));
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("ccc");
-        sb.insert(0,'a');
-        System.out.println(sb);
+//        for (char[] triplet : triplets) {
+//            System.out.println(Arrays.toString(triplet));
+//        }
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("ccc");
+//        sb.insert(0,'a');
+//        System.out.println(sb);
+
+//        StringBuilder sb = new StringBuilder("abd, sd, 343s");
+//        int i = sb.lastIndexOf(",");
+//        System.out.println(i);
+//        sb.replace(i, i + 1, " and");
+//        System.out.println(sb);
+
+        String str = new String("<H1>Chapter 1 - 介绍正则表达式</H1>");
+        // * 默认是贪婪的
+        String kk = str.replaceAll("<.*>", "kk");
+        System.out.println(kk);
+        // *? 是非贪婪的
+        kk = str.replaceAll("<.*?>", "kk");
+        System.out.println(kk);
+        // 只匹配了<H1>, </H1>未匹配上
+        kk = str.replaceAll("<\\w+?>", "kk");
+        System.out.println(kk);
     }
 }
