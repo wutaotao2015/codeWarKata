@@ -129,7 +129,6 @@ vim操作记忆
 	hlsearch 高亮搜索
 	ignorecase 搜索时忽略大小写
 	hidden 不退出buffer切换buffer?
-	mapleader \x命令变为,x
 	syntax on 语法高亮
 	helplang=cn 帮助文档变成中文
 
@@ -164,6 +163,9 @@ vim操作记忆
 
 	:set foldmethod=indent
 	:set foldlevel=0 代表所有fold都会折叠
+    ,w 代表:w! 可以不退出快速保存
+    在可视模式下按*或#可以查找选中的块内容
+    ,enter(CR)可以在搜索完后去除高亮
 
 git命令
         git diff  显示工作区和仓库的区别
