@@ -1,0 +1,51 @@
+
+set nocompatible
+
+set clipboard+=unnamed
+
+set number
+set ruler
+set showcmd
+set showmode
+
+set backspace=indent,eol,start
+set autoread
+set history=1000
+set noswapfile
+set nobackup
+set nowb
+
+set autoindent
+set smartindent
+set smarttab
+
+set nowrap
+set linebreak
+
+set scrolloff=2
+set sidescrolloff=3
+set sidescroll=1
+
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+set hidden
+let mapleader=","
+syntax on
+
+set foldmethod=indent
+set foldlevel=0
+set foldcolumn=4
+set shiftwidth=2
+
+inoremap ( ()<Esc>i
+inoremap [ []<Esc>i
+inoremap { {}<Esc>i
+inoremap " ""<Esc>i
+
+imap ,, <Esc>la
+
+imap <C-I> <Esc>
+
