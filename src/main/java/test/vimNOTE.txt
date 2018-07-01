@@ -192,48 +192,47 @@ git命令
 vim
 
    临时退出vim
-   ctrl+z 可以临时退出到shell环境,它将vim放入后台，
-   执行操作完成后，可以按fg将vim返回前台，重新进入vim
-   (也可以:shell命令退出，exit命令返回),不过ctrl+z,fg更简洁
-   linux下我们如果想一个任务或者程序还后台执行可以使用&，实际上linux还提供了其他任务调度的命令。
-   bg(background)
-   将一个在后台暂停的命令，变成继续执行
-   fg(foreground)
-   将后台中的命令调至前台继续运行
-   jobs
-   查看当前有多少在后台运行的命令
-   ctrl + z
-   可以将一个正在前台执行的命令放到后台，并且暂停
-   nohup 命令(no hang up)
-   用途：不挂断地运行命令。
+    ctrl+z 可以临时退出到shell环境,它将vim放入后台，
+    执行操作完成后，可以按fg将vim返回前台，重新进入vim
+    (也可以:shell命令退出，exit命令返回),不过ctrl+z,fg更简洁
+    linux下我们如果想一个任务或者程序还后台执行可以使用&，实际上linux还提供了其他任务调度的命令。
+    bg(background)
+    将一个在后台暂停的命令，变成继续执行
+    fg(foreground)
+    将后台中的命令调至前台继续运行
+    jobs
+    查看当前有多少在后台运行的命令
+    ctrl + z
+    可以将一个正在前台执行的命令放到后台，并且暂停
+    nohup 命令(no hang up)
+    用途：不挂断地运行命令。
 
+    命令 vc = cd codeKataWar/test
+    vr = .vim_runtime/
 
-   命令 vc = cd codeKataWar/test
-   vr = .vim_runtime/
+    直接执行vim,可以看到nerdTree
+    t是打开新tab,并跳转过去
+    T是打开新tab,不跳过去
+    (gt是到下一个tab
+     gT是到前一个tab
+     1gt是到第一个tab,2gt是到第2个tab,...)
+    用,o切换buffer来切换tab更快
 
-   直接执行vim,可以看到nerdTree
-   t是打开新tab,并跳转过去
-   T是打开新tab,不跳过去
-   (gt是到下一个tab
-   gT是到前一个tab
-   1gt是到第一个tab,2gt是到第2个tab,...)
-   用,o切换buffer来切换tab更快
+    vim中一个tab对应着一个buffer,
+    而一个tab中的多个窗口(split)可以同时编辑一个buffer,一个窗口的修改会同步到别的窗口中
 
-   vim中一个tab对应着一个buffer,
-   而一个tab中的多个窗口(split)可以同时编辑一个buffer,一个窗口的修改会同步到别的窗口中
+    这跟eclipse和idea是一样的
+    横向分割命令:sp
+    纵向分割命令:vs
+    用ctrl+h,j,k,l可以在窗口间移动(vimrc已经配置好)
 
-   这跟eclipse和idea是一样的
-   横向分割命令:sp
-   纵向分割命令:vs
-   用ctrl+h,j,k,l可以在窗口间移动(vimrc已经配置好)
-
-   ,tm 0是将当前tab移动到第一个， ,tm 1是移到第2个tab
-   :q或:close或,tc关闭当前tab
-   ,to 只留下当前tab, tab only,其他tab都被关闭
-   :wa可以一次保存所有buffer的改动并继续工作
-   :xa可以保存所有改动并退出vim
-   :wa和:xa只有文件有改动时才会进行操作，而:w不管是否变动都会改变
-   leader+w = :w! 即强制写入
+    ,tm 0是将当前tab移动到第一个， ,tm 1是移到第2个tab
+    :q或:close或,tc关闭当前tab
+    ,to 只留下当前tab, tab only,其他tab都被关闭
+    :wa可以一次保存所有buffer的改动并继续工作
+    :xa可以保存所有改动并退出vim
+    :wa和:xa只有文件有改动时才会进行操作，而:w不管是否变动都会改变
+    leader+w = :w! 即强制写入
 
    ack.vim
     在命令行使用ack命令(无效，vim中弃用,只能在shell中使用)
@@ -326,6 +325,17 @@ vim
         在弹出的窗口中选择一项回车可以查看具体提交信息
         用命令:copen可以将结果放入quicklist中，可以上下移动查看过往提交记录
         用命令:cnext,:cprev,:cfirst,:clast可以新增tab查看提交记录详情
+        安装插件vim-unimpaired后，可以[q = :cprev, ]q = :cnext
+        即左中括号向前，右中括号向后。
+        [Q = :cfirst, ]Q = :class
+        [<Space> 可以向上空一行
+        ]<Space>向下空一行
+        [e 和 ]e可以上下移动当前行
+
+        安装vim-unimpared插件执行命令
+        git clone https://tpope.io/vim/unimpaired.git my_plugins/unimpaired
+        即可，重启终端后可以看到效果
+
     :Gdiff
         查看不同,集成了vim的diff功能,不好用，弃用,用原生的:Git! diff head
     :Gmove
@@ -365,10 +375,18 @@ vim
         5. 用:Gcommit进行提交
         6. 用:Gpush推送
    vim-indent-object
-    ss
+    可视模式下的相同缩进级别的语句块选择
+    ii可以选择同一级别的
+    ai除了同一级别，还有上一行也会被选中
+    aI除了同一级别，上一行和下一行都会被选中
+    (python很有用，java用+,-智能选择更好)
    vim-multiple-cursors
-    sd
+    多个光标同时选择的工具，ctrl+n开始选择，再按ctrl+n可以选下一个
+    目前只能选择2个，弃用，可以用正则表达式代替
    vim-yankstack
-    sd
+    剪切历史板，
+    ctrl,p  previous,older paste record
+    ctrl,n  newer paste record
    vim-zenroom2
     上面已经提到goyo,用,z即可进入纯净编写空间
+
