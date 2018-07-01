@@ -271,6 +271,7 @@ vim
     有个小问题：当文件在外部更新后，在nerdTree上按r或R刷新后，
     需要关闭原来的tab,即旧buffer,开启新buffer才能看到更新
    mru.vim
+    ,f
     most recently files,如果是编辑最近做过的文件，
     在打开任意vim文件后，不用,j走ctrlp,直接,f
    open_file_under_cursor
@@ -289,6 +290,7 @@ vim
    vim-commentary
     注释代码用,gcc注释一行，gcu打开注释，gc注释选中的块
    vim-expand-region
+    + or -
     按语法智能选择，和eclipse,idea中一样，syntax aware selection
     +是扩大选择范围，-是减小选择范围
     选择时会自动进入可视模式
@@ -329,8 +331,8 @@ vim
         在弹出的窗口中选择一项回车可以查看具体提交信息
         用命令:copen可以将结果放入quicklist中，可以上下移动查看过往提交记录
         用命令:cnext,:cprev,:cfirst,:clast可以新增tab查看提交记录详情
-        安装插件vim-unimpaired后，可以[q = :cprev, ]q = :cnext
-        即左中括号向前，右中括号向后。
+        安装插件vim-unimpaired后，可以
+        [q = :cprev, ]q = :cnext
         [Q = :cfirst, ]Q = :class
         [<Space> 可以向上空一行
         ]<Space>向下空一行
@@ -356,7 +358,7 @@ vim
         最后再进行提交即可
 
         1. 本地开发代码先用:Gwrite暂存，不提交，可以用:Gstatus查看文件状态
-            用:Git! diff head确认改动
+            用:Git! diff head确认改动或者在status的窗口中用D查看改动
         2. 用:Gfetch命令拉取远程代码
         3. 用:Git! diff master origin/master（可以tab提示）查看别人的改动。
         4. 与本地有冲突可以及时修改，有问题时使用:Gmerge会报错，此时git会提示
@@ -379,18 +381,22 @@ vim
         5. 用:Gcommit进行提交
         6. 用:Gpush推送
    vim-indent-object
+    ii, ai, aI
     可视模式下的相同缩进级别的语句块选择
     ii可以选择同一级别的
     ai除了同一级别，还有上一行也会被选中
     aI除了同一级别，上一行和下一行都会被选中
     (python很有用，java用+,-智能选择更好)
    vim-multiple-cursors
+    不好用
     多个光标同时选择的工具，ctrl+n开始选择，再按ctrl+n可以选下一个
     目前只能选择2个，弃用，可以用正则表达式代替
    vim-yankstack
+    ctrl,p and ctrl,n
     剪切历史板，
     ctrl,p  previous,older paste record
     ctrl,n  newer paste record
    vim-zenroom2
+    ,z
     上面已经提到goyo,用,z即可进入纯净编写空间
 
