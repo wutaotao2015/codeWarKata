@@ -178,6 +178,7 @@ git命令
 	git push   推送
 	git commit 本身是将暂存的文件提交  -a 是add的缩写 -m 是message的缩写
 	git add 可以将未跟踪的文件进行跟踪，也可以将已经跟踪的文件进行暂存
+    git mv 重命名文件或目录
 
 翻页
         ctrl+f forward  向后翻一页
@@ -188,12 +189,163 @@ git命令
 	zz   光标所在行居中
 	zt  top 光标所在行移动到第一行
 	zb  bottom 光标所在行移动到最后一行
+vim
+
+   临时退出vim
+   ctrl+z 可以临时退出到shell环境,它将vim放入后台，
+   执行操作完成后，可以按fg将vim返回前台，重新进入vim
+   (也可以:shell命令退出，exit命令返回),不过ctrl+z,fg更简洁
+   linux下我们如果想一个任务或者程序还后台执行可以使用&，实际上linux还提供了其他任务调度的命令。
+   bg(background)
+   将一个在后台暂停的命令，变成继续执行
+   fg(foreground)
+   将后台中的命令调至前台继续运行
+   jobs
+   查看当前有多少在后台运行的命令
+   ctrl + z
+   可以将一个正在前台执行的命令放到后台，并且暂停
+   nohup 命令(no hang up)
+   用途：不挂断地运行命令。
 
 
+   命令 vc = cd codeKataWar/test
+   vr = .vim_runtime/
 
+   直接执行vim,可以看到nerdTree
+   t是打开新tab,并跳转过去
+   T是打开新tab,不跳过去
+   (gt是到下一个tab
+   gT是到前一个tab
+   1gt是到第一个tab,2gt是到第2个tab,...)
+   用,o切换buffer来切换tab更快
 
+   vim中一个tab对应着一个buffer,
+   而一个tab中的多个窗口(split)可以同时编辑一个buffer,一个窗口的修改会同步到别的窗口中
 
+   这跟eclipse和idea是一样的
+   横向分割命令:sp
+   纵向分割命令:vs
+   用ctrl+h,j,k,l可以在窗口间移动(vimrc已经配置好)
 
+   ,tm 0是将当前tab移动到第一个， ,tm 1是移到第2个tab
+   :q或:close或,tc关闭当前tab
+   ,to 只留下当前tab, tab only,其他tab都被关闭
+   :wa可以一次保存所有buffer的改动并继续工作
+   :xa可以保存所有改动并退出vim
+   :wa和:xa只有文件有改动时才会进行操作，而:w不管是否变动都会改变
+   leader+w = :w! 即强制写入
 
-test
+   ack.vim
+    在命令行使用ack命令(无效，vim中弃用,只能在shell中使用)
+   bufexplorer
+    ,o
+    快速切换buffer,不要在nerdTree内使用，选择需要的buffer回车即可,
+    省去了切换tab的麻烦
+   ctrlp
+    ,j
+    进入ctrlp,当前工作目录可以在nerdTree上用cd命令更改
+    进入ctrlp后，可以用ctrl+f或ctrl+b切换到文件file,buffer,mru(most recently used)3种模式
+    ctrl+r在以上3种模式的基础上增加是否支持正则表达式的功能
+    ctrl+d在以上3中模式的基础上决定输入的字符串匹配的是路径Path还是文件名file
 
+    ctrlp相当于补充了nerdTree的查找文件功能，类似windows中的everything
+    nerdTree的nerdFind只是在当前tab中打开nerdTree，也就是说,nn = ,nf
+
+    Best Practice
+        即可以打开终端后，输入vim,打开nerdTree中的任意一个文件，进入右边vim编辑窗口，
+        按,j进入ctrlp页面，可以按ctrl+b进入mru或file模式（此时buffer为空）
+        按需打开ctrl+r和ctrl+d,找到需要的文件后，(或,f打开mru文件)ctrl+j,k后回车打开
+        再按,nf定位到nerdTree,可以查看具体路径位置，可以按U在保持当前目录打开
+        状态情况下将根目录向上提高一层，按需提升
+
+   goyo和zenroom2
+    ,z
+    进入专心编写模式，排除边框,tab等所有干扰
+   lightline.vim
+    需要在my_config.vim中加入set shownomode，状态栏和默认的insert模式等重复了
+   NerdTree
+    以上已经够多，主要是2个功能，U升级根目录和定位,nf
+    有个小问题：当文件在外部更新后，在nerdTree上按r或R刷新后，
+    需要关闭原来的tab,即旧buffer,开启新buffer才能看到更新
+   mru.vim
+    most recently files,如果是编辑最近做过的文件，
+    在打开任意vim文件后，不用,j走ctrlp,直接,f
+   open_file_under_cursor
+    相当于go to file命令，可以用nerdTree的cd功能改变cwd,但文件会在nerdTree中打开，弃用
+    (不用nerdTree，可以用:pwd查看当前路径，然后用:cd %:p:h命令即可将cwd切换到该路径下)
+   pathogen.vim
+    vim的插件管理包，不需要改动
+   snipmate.vim
+    按tab自动补全工具，plugin里也有java的部分
+    有for,gs(getter,setter方法),if,log(sysout),m(method)
+    这边作用有限，可以自己定义
+   ale
+    asynchronous lint engin 代码扫描工具
+    配制中有let g:ale_lint_on_text_changed = 'never'说明只有保存代码时才会检查，提高了性能
+    (亲测java保存有效，但离ide还是相距较远)
+   vim-commentary
+    注释代码用,gcc注释一行，gcu打开注释，gc注释选中的块
+   vim-expand-region
+    按语法智能选择，和eclipse,idea中一样，syntax aware selection
+    +是扩大选择范围，-是减小选择范围
+    选择时会自动进入可视模式
+   vim-fugitive
+    集成git到vim的工具
+    :Git!
+        它可以执行任何原生git命令，
+        如:Git! status相当于执行git status并且在一个临时窗口显示命令执行结果
+    :Gstatus
+        在弹出的状态栏里，可以对每一个修改过的文件进行操作，类似idea中的versionControl栏一样
+        D  :Gdiff    显示不同
+        O  :Gtabedit 在新tab中进行编辑
+        q  close status 退出当前status窗口
+
+        cc :Gcommit  提交
+        U  总体是回退的意思，默认checkout,
+           对于已暂存staged files是恢复到head,未跟踪文件clean,
+           未合并文件rm(remove files from worktree and index)
+        -  应该只用来对not staged files使用,add
+           对于not staged files会reset,已经暂存的会add
+        o  :Gsplit   在新窗口中打开
+        S  :Gvsplit  打开竖屏分割窗口
+        r  reload status 刷新status
+    :Gcommit
+        即提交，它会自动弹出一个split注释提示框,填写完后用:wq即可提交
+    :Grebase
+        同git rebase
+    :Gfetch
+    :Gmerge
+        拉取远程代码和合并，git pull = git fetch + git merge合并成功时也会弹出注释提示框
+    :Gpull
+        git pull拉取
+    :Gpush
+        git push
+    :Glog
+        默认是记录当前文件的提交记录(弃用)。
+        带参数--可以查看所有文件的commit提交历史记录,相当于查看仓库的变化。
+        在弹出的窗口中选择一项回车可以查看具体提交信息
+        用命令:copen可以将结果放入quicklist中，可以上下移动查看过往提交记录
+        用命令:cnext,:cprev,:cfirst,:clast可以新增tab查看提交记录详情
+    :Gdiff
+        查看不同,集成了vim的diff功能
+    :Gmove
+        同git mv命令，可以重命名
+    :Gblame
+        可以查看文件中每行的改动记录，还有很多配置项可以进行进一步操作
+
+    Best Practice
+
+        (拉取代码后有冲突还是要把自己本地的改动备份好，查看自己的改动用Glog --
+        再在gitStatus里U回退一切未提交的东西,
+        再用:Git! reset --hard head^回退到上一个版本 或指定SHA值回退到特定版本)
+        再进行拉取Gpull操作后，将自己本地的看情况小心还原，不能覆盖别人的改动.
+        最后再进行提交即可
+
+        先fetch，再merge,再commit,再push
+
+        首先拉取代码:Gfetch,此时还未合并到本地,再用:Gstatus查看workTree状态，
+        看到已修改，在改动的文件那里使用
+   s
+   d
+   s
+   d

@@ -69,8 +69,5 @@ public class Test {
         // 前面的先贪婪？
         wtt = wtt.replaceAll("(.+), (.+)", "$1 and $2");
         System.out.println(wtt);
-
-
-        System.out.println("hello");
     }
 }
