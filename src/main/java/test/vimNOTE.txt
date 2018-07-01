@@ -28,7 +28,7 @@ vim操作
 	2dd  删除2行
 	3p  粘贴文本3次
 	100idesu[esc] 重复插入desu100次
-	. 重复上一个命令 100desu 
+	. 重复上一个命令 100desu
 	3. 重复3次“desu" 而不是300
 
 更强
@@ -82,7 +82,7 @@ vim操作记忆
 	 (iterm切换窗口快捷键ctrl + n)
 
 	 查找 / ? n N * # (*#使用了词首和词尾进行区分)
-	 /\<the\> 匹配单独的单词the 
+	 /\<the\> 匹配单独的单词the
 	 %会自动查找到(),[],{},进行匹配
 	 gg是文件头，G是文件尾
 	 而视野中的光标跳转为H(Home),M(middle),L(last)
@@ -111,7 +111,7 @@ vim操作记忆
 	 光标在单词中间也可以删除，即它是对光标所在的文本对象进行操作
 	 diw 删除一个单词，但不包括空白符
 	 它是作为一个整体，光标的位置是无所谓的
-	 IS = INNER SENTENCE 
+	 IS = INNER SENTENCE
 	 如cis 会修改一个句子，它不包括句子后的空白符
 	 as也是所在的句子，但它包括空白符，das即可删除该句子，包括空白符
 	 R可以转换成替换模式
@@ -156,7 +156,7 @@ vim操作记忆
 折叠
 	zfap  zf=z folder ap 创建一个折叠
 	zo    z open 打开一个折叠
-	zc    z close 关闭一个折叠 
+	zc    z close 关闭一个折叠
 	zi    打开或关闭所有折叠
 	za    打开光标所在折叠
 	zA    递归打开光标所在折叠
@@ -169,8 +169,8 @@ vim操作记忆
 
 git命令
         git diff  显示工作区和仓库的区别
-	git status 显示当前git状态 
-	status: 
+	git status 显示当前git状态
+	status:
 	untracked, unmodified, modified, staged
 	修改完后需要暂存变成已暂存状态才能进行提交，用-am可以跳过暂存状态
 	git pull 拉代码
@@ -188,4 +188,12 @@ git命令
 	zz   光标所在行居中
 	zt  top 光标所在行移动到第一行
 	zb  bottom 光标所在行移动到最后一行
+
+
+
+
+
+
+
+test
 
