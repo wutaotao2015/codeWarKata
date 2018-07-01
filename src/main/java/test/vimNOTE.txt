@@ -327,7 +327,7 @@ vim
         用命令:copen可以将结果放入quicklist中，可以上下移动查看过往提交记录
         用命令:cnext,:cprev,:cfirst,:clast可以新增tab查看提交记录详情
     :Gdiff
-        查看不同,集成了vim的diff功能
+        查看不同,集成了vim的diff功能,不好用，弃用,用原生的:Git! diff head
     :Gmove
         同git mv命令，可以重命名
     :Gblame
@@ -341,11 +341,34 @@ vim
         再进行拉取Gpull操作后，将自己本地的看情况小心还原，不能覆盖别人的改动.
         最后再进行提交即可
 
-        先fetch，再merge,再commit,再push
+        1. 本地开发代码先用:Gwrite暂存，不提交，可以用:Gstatus查看文件状态
+            用:Git! diff head确认改动
+        2. 用:Gfetch命令拉取远程代码
+        3. 用:Git! diff master origin/master（可以tab提示）查看别人的改动。
+        4. 与本地有冲突可以及时修改，有问题时使用:Gmerge会报错，此时git会提示
+            你需要commit或stash,
+            stage是暂存，是提交commit前必须经过的一步
+            stash是相当于一个栈，当你开发了一半的内容不想提交而又有新任务时时，可以
+                使用git stash命令还原一个clean work tree.
+                开发完后使用git stash pop还原以前开发的内容，有冲突git会提示出来。
+                可以使用git stash list/show查看stash的内容
+            已经暂存stage的文件也会被stash起来
+            一般还是避免使用stash
 
-        首先拉取代码:Gfetch,此时还未合并到本地,再用:Gstatus查看workTree状态，
-        看到已修改，在改动的文件那里使用
-   s
-   d
-   s
-   d
+            git diff            查看work tree和stage区的区别
+            git diff head       查看work tree和仓库的区别
+            git diff --cached   查看stage区和仓库的区别
+            其中暂存后，work tree和stage的数据一致了，所以:Gwrite后
+            可以同时用git diff head和git diff --cachee查看不同
+
+           解决问题后使用:Gmerge拉取代码,拉取完后gitStatus上会显示up to date with 'origin master'
+        5. 用:Gcommit进行提交
+        6. 用:Gpush推送
+   vim-indent-object
+    ss
+   vim-multiple-cursors
+    sd
+   vim-yankstack
+    sd
+   vim-zenroom2
+    上面已经提到goyo,用,z即可进入纯净编写空间
