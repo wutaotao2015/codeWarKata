@@ -251,9 +251,13 @@ vim
     nerdTree的nerdFind只是在当前tab中打开nerdTree，也就是说,nn = ,nf
 
     Best Practice
-        即可以打开终端后，输入vim,打开nerdTree中的任意一个文件，进入右边vim编辑窗口，
+        即可以打开终端后，输入vim,在nerdTree中直接输入,f进入mru,选择一个文件打开后，
+        使用:only命令关闭右侧的空split窗口
+
+        (也打开nerdTree中的任意一个文件，进入右边vim编辑窗口，
         按,j进入ctrlp页面，可以按ctrl+b进入mru或file模式（此时buffer为空）
-        按需打开ctrl+r和ctrl+d,找到需要的文件后，(或,f打开mru文件)ctrl+j,k后回车打开
+        按需打开ctrl+r和ctrl+d,找到需要的文件后，(或,f打开mru文件)ctrl+j,k后回车打开)
+
         再按,nf定位到nerdTree,可以查看具体路径位置，可以按U在保持当前目录打开
         状态情况下将根目录向上提高一层，按需提升
 
