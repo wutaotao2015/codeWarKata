@@ -370,6 +370,11 @@ vim
                 可以使用git stash list/show查看stash的内容
             已经暂存stage的文件也会被stash起来
             一般还是避免使用stash
+            git stash apply命令会保存stash备份
+            git stash pop命令会弹出stash,同时删除相应记录
+            git stash list可以查看stash列表
+            当apply或pop时默认内容全部为unstaged状态，弹出时加上--index选项可以恢复index文件，
+            即stash前的stage暂存状态
 
             git diff            查看work tree和stage区的区别
             git diff head       查看work tree和仓库的区别
