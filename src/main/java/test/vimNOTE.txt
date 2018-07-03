@@ -380,6 +380,13 @@ vim
            解决问题后使用:Gmerge拉取代码,拉取完后gitStatus上会显示up to date with 'origin master'
         5. 用:Gcommit进行提交
         6. 用:Gpush推送
+
+        为什么需要stage暂存区？
+
+        可以把提交的内容分开，因为提交只会提交暂存区中的内容(index文件),比如在实现功能时修改了以前的一个bug,
+        可以暂存这个bug先提交，这样就更清晰，便于管理。可以用git diff --cache查看即将要
+        提交的内容是否正确。
+
    vim-indent-object
     ii, ai, aI
     可视模式下的相同缩进级别的语句块选择
