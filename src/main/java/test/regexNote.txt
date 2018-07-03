@@ -360,3 +360,14 @@ chapter 3 正则表达式的特性和流派概览
     正则表达式的注意事项和处理方式
         1. 句法规则 定义正则表达式，如egrep中用命令行参数引入正则表达式
         2. 对结果进行操作 如egrep显示匹配的行，包括匹配，替换，查找
+
+        集成式处理
+            $text =~ m/^Subject: (.*)/i; $subject = $1;
+        程序式处理和面向对象式处理
+            java中的正则处理
+                import java.util.regex.*;
+                Pattern regex = Pattern.compile("^Subject (.*)", Pattern.CASE_INSENSITIVE);
+                Matcher m = regex.matcher(line);
+                if(m.find()) {
+                    subject = m.group(1);
+                }
