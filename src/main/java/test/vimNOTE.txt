@@ -398,6 +398,10 @@ vim
         本地修改都不要了,全部去除         git checkout (Gstatus中的U命令)
         已经提交的东西想回退               git revert
 
+        经测试，使用reset时，若原来已经stage的文件和本地仓库后来修改的内容有冲突时，
+        reset后直接以本地work tree的内容为准，即原来stage的内容丢失了
+        所以需要慎重reset,reset前需保证work tree clean
+
    vim-indent-object
     ii, ai, aI
     可视模式下的相同缩进级别的语句块选择
