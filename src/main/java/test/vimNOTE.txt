@@ -310,7 +310,7 @@ vim
            对于已暂存staged files是恢复到head,未跟踪文件clean,
            未合并文件rm(remove files from worktree and index)
         -  应该只用来对not staged files使用,add
-           对于not staged files会reset,已经暂存的会add
+           对于not staged files会add,已经staged的会reset
         o  :Gsplit   在新窗口中打开
         S  :Gvsplit  打开竖屏分割窗口
         r  reload status 刷新status
