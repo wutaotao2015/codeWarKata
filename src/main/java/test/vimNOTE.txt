@@ -392,6 +392,12 @@ vim
         可以暂存这个bug先提交，这样就更清晰，便于管理。可以用git diff --cache查看即将要
         提交的内容是否正确。
 
+        git原生命令
+        移除未追踪文件 git clean -f
+        暂存文件不暂存了，回复到workTree   git reset
+        本地修改都不要了,全部去除         git checkout (Gstatus中的U命令)
+        已经提交的东西想回退               git revert
+
    vim-indent-object
     ii, ai, aI
     可视模式下的相同缩进级别的语句块选择
