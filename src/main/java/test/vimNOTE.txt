@@ -422,3 +422,160 @@ vim
     ,z
     上面已经提到goyo,用,z即可进入纯净编写空间
 
+
+iVim
+
+    vim for ios
+
+    1. File System
+        由于ios的沙盒系统，用户产生的内容在data目录下的document目录中，所以它就是iVim的$HOME目录
+
+        document目录下的子目录Inbox是存储别的app分享给iVim的文件，你不能在这个文件夹下创建文件。
+
+        iVim有一个文件浏览器插件netrw,可以用:edit .来启动它，用:help netrw来查看帮助文档
+
+        iVim支持Files app
+        iVim可以通过ios-share编辑其他app的文本
+
+    2. font management
+
+        a. system fonts
+            Source Code Pro 是iVim内置的
+        b. user fonts
+            可以通过share extension从其他app中导入ttf,otf字体
+
+        the font commands
+            :ifont 列出可用的字体列表并改变当前字体
+            :ideletefont 可以删除用户自定义字体
+            :help :ifont或 :help :deletefont可以查看具体信息
+            只有monospace fonts是良好支持的
+
+    3. extended keyboard
+
+        the compact button
+            中间的键是主要的，点击一下就可以，其他的需要把它向中间拖动才可以生效。
+        the control key
+            a. 按1下ctrl键，会让它处于one-off状态，一个C-组合后它会自动回复。
+            b. 按2下ctrl键，合让它处于hold状态，一个C-组合后不会自动回复，直到再次点击才会回复，
+                它方便于连续的C-组合键输入。
+            c. 上面2种状态，轻点一下都会回复到初始状态。
+        hide and show
+            一个手指长按屏幕会隐藏扩展键盘，再长按会出现。
+            默认是启动时出现，可以在ios-settings中修改成默认隐藏。
+        Customize
+            如果默认的按钮或键不喜欢，可以用命令:isetekbd修改。
+
+    4. Multi-stage language support
+
+        iVim支持输入中文或日语等多种语言。
+        同搜狗输入法一样，输入的key会在光标上显示，候选词在键盘上方出现，选择后替代keys,这个会话就结束了。
+        按esc键会取消当前的session,并且所有的输入keys都会被删除。
+        轻点屏幕或按方向键将会结束当前session,已经存在的keys会被当成最后的输入结果。
+
+        注意：
+        a. 在非insert模式下按键会转化成普通字符。
+        b. 在ios-dictation模式下多国家输入会失效。
+
+    5. Dictation
+        iVim 指出ios系统的听写输入
+    6. Open Url
+
+        在app间分享信息的一个办法是通过URL，你可以将信息放入一个URL中并打开它，
+        然后系统会启动支持的app,并让它去处理这个url.
+
+        Example:
+
+            Url "https://"是被ios系统中的safari浏览器处理的。。。
+            https://www.example.com/search?q={expand('<cword>')%[Q}
+            可以查看app: Pin的url工作流教程。
+
+        Include information
+            通过使用vim表达式，你可以在url中添加动态信息，如剪切板内容，当前文件名或者是函数的结果。
+            上面的{expand('<cword>')%[Q}就是一个变量名，
+            它会在url被打开时被光标上的单词所替换，这样打开的网址搜索的内容就是光标上的单词了(相当于打开百度查单词)
+
+            :iopenurl可以查看打开url的具体用法。
+    7. share
+
+        sharing makes iVim's editing power available to more apps.
+
+        Importing
+            a. share with iVim
+                在可以分享的app中，当调用时，选中的文本会出现在一个悬浮框中，可以进行简单编辑，
+                按Post可以打开iVim,文本会出现在一个新tab的新buffer中。
+            b. copy to iVim
+                它会复制被分享的文件到Document目录中，也会打开一个新tab展示该文件。
+                如果已经有相同文件名的文件，它会被重命名以避免冲突。
+            用命令:idocuments import命令可以从iCloud Drive或其他文档提供者那里获取文本文件，
+            这样就可以不用离开iVim来进行导入了。
+            导入的文件或文本都会在新tab中打开。
+        Exporting
+            用命令:ishare就可以分享文件或文本给其他app了。
+
+        Editing in place
+
+            :idocuments允许你直接在iCloud Drive或其他文档提供者中编辑文件。
+
+            可以在document picker中打开目录，创建或重命名子目录或文件，删除文件等。
+            不过只能通过vim的方式进行，如通过vim方法，命令等。（没什么用）
+        Items in the share panel
+            share with iVim
+            copy to iVim
+            open in iVim
+                在iVim中直接编辑目标文件。
+            iVim-old-documents
+                命令:iolddocs可以打开以前用iVim打开过的文件或目录，相当于历史文件列表。
+
+        用:help :ishare或:help :idocuments获取更多信息。
+
+    8. Settings
+
+        ios-settings
+        Launch Option
+        Extended Keyboard
+            是否默认隐藏扩展键盘
+        Hardware Keyboard
+            a. 映射大写键
+                如果外接了实体键盘，可以把它的大写键映射为esc或ctrl键，不过其中有需要注意的地方。
+            b. 使alt能映射
+                enabled后，它会把alt键映射为<A-组合键，否则，它会被ios系统当做外部符号输入。
+        Dictation
+
+    9. External keyboard
+
+        a. ctrl可以变成<C-组合外，Command键会变为<D-组合。
+        b. <D-s>,<D-h>和<D-.>是ios系统保留的组合，应该是不能使用。
+        c. 可以将alt映射为<A-组合。
+        d. esc,arrows,tab and enter同修饰键ctrl，command,alt and shift分别组合是可以的，
+            但<C-CR>现在不生效了。
+        e. 功能键F1失效了，因为API的限制。
+        f. 多个修饰键组合如<D-C->是不支持的
+        g. 可以将caps_lock键在ios-settings中映射为esc或ctrl键
+
+        注意：因为api的限制，只支持英文键盘。
+
+    10. Integrated Exuberant Ctags
+
+        命令:ictags,可以编辑自己的配置文件.ctags放入home directory下，每次ctags调用时都会读取它。
+        可以用:help :ictags查看具体信息
+
+    11. Miscellanenous
+
+        Touch support
+
+            a. 单点轻点像鼠标左击一样，它可以改变光标位置(用h,j,k,l一般更好，不过句首句尾就方便了)
+               切换window和选择特定tab
+
+            b. 单个手指拖动可以选择文本(手机太小了，ipad大点选择方便一些),
+                还可以改变window的大小，只要拖动该window的状态栏即可。
+
+            c. 2个手指的拖动可以在一个window钟滚动文本。
+
+            d. 1个手指长按是切换扩展键盘，2个手指长按是隐藏系统键盘，单点又会显示它。
+
+        Autosave
+
+            iVim不会自动保存打开的文件，所有未保存的变动都会在iVim终止的时候丢失。
+            这是由于ios的终止app的方式决定的。
+
+
