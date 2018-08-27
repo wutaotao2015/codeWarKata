@@ -924,4 +924,77 @@ chapter 5 正则表达式实用技巧
 
         去除文本首尾的空白字符
 
-            赛
+            最简单
+                s/^\s+//;
+                s/\s+$\\;
+            1. s/^\s*(.*?)\s*$/$1/  忽略优先，但需要多次回溯检查\s*$，效率低
+            2. s/^\s*((?:.*\S)?)\s*$/$1/  非捕获型括号得到一个最后非空白字符.
+            3. s/^\s+|\s+$//g   顶级的多选分支结构的表达式很难优化，\g是从上次匹配成功后的位置继续匹配
+
+        HTML相关范例
+            匹配html tag
+                常用的匹配tag的表达式为<[^>]+>,但它对于文本<div class=">">出错，
+                所以可以将引号内和引号外部分用多选分支区分开来，
+                即<('[^']*'|"[^"]*"|[^'">])*>
+                其中最后一个表达式[^'">]如果加+号，与外面的*号会产生奇怪的结果，下一章介绍。
+                可以将括号内的表达式写为固化分组(?>)或*+占有优先量词。
+                因为多选分支之间没有重复，一个匹配其他肯定匹配不了，这段匹配成功后如果后面匹配失败不用回溯到多选分支处。
+                即若后面的>匹配失败，也不用回溯到其他多选分支处,所以可以用固化分组。
+            匹配html link
+                针对文本<a href="www.baidu.com">baidu</a>获得其中的url链接和链接文本baidu
+                可以用<a\b([^>]+)>(.*?)</a>来匹配，
+                其中$1获得了url,用表达式
+                $guts =~ m{
+                    href
+                    \s* = \s*
+                    (?:
+                        "([^"]*)" |
+                        '([^']*)'|
+                        ([^'">\s]+)
+                    )
+                }xi
+                其中$1,$2,$3分别用于捕获多选分支的可能捕获结果，实际上只有一个会有值。
+                $url = $+;
+                perl中的$+变量可以得到$1,$2...中编号最靠后的捕获文本（有值？）如果支持命名捕获，可以在程序中进行判断。
+            检查http url
+                $url =~ m{^http://([^/:]+)(:(\d+))?(/.*)?$}i
+            验证主机名
+            在真实世界中提取url
+            扩展的例子
+                保持数据的协调性
+                    如在一系列的5位邮政编码中匹配到以44开头的编码，表达式\d\d\d\d\d匹配时传动装置默认逐个字符移动，
+                    从而导致匹配出错，需要让它匹配时跳过整个邮编，保持正则引擎的协调。
+                根据期望保持匹配的协调性
+                    为了匹配到需要的44开头的邮编，可以将非44开头的邮编用非捕获括号括起来，加在期望匹配的44表达式前
+                    1. (?:[^4]\d\d\d\d|\d[^4]\d\d\d)*
+                    2. (?:(?!44)\d\d\d\d\d)* 正向否定环视
+                    3. (?:\d\d\d\d\d)*? 忽略优先量词 最符合需求要求，一开始该忽略优先为空，若后面的44\d\d\d匹配失败，
+                        则回溯后，前面的忽略优先表达式匹配5位数字，完美的跳过了该非期望邮编。
+                不匹配时也应当保证协调性
+                    上述表达式在匹配过一轮后，若没有匹配成功，经过传动装置传动，一样会产生匹配错误的情况。
+                    对于1和2表达式，可以在44\d\d\d后加上?号，这样期望匹配的文本就变成可选项，
+                    不会产生由于必须匹配而发生的强迫回退，但这样会导致a*b?即无目标文本时也匹配成功的情况发生，虽然避免了错配
+                    对于表达式3，由于它是忽略优先，需要44\d\d\d进行强制匹配以推动匹配过程，加上？号后变成可选，
+                    表达式实际匹配在字符串开始处就停止了。
+                使用\G保证协调
+                    \G is an anchor; it indicates where the match is forced to start. When \G is present, it can't start matching at
+                    some arbitrary later point in the string; when \G is absent, it can.
+                    \G保证了匹配的连续性，即一旦发生传动，匹配立刻失败。
+                    @zips =~ m/\G(?:(?!44)\d\d\d\d\d)*(44\d\d\d)/g;
+                    这样就不用在后面的程序中针对不存在目标字符串也匹配成功的情况进行处理了。
+                    Usually when a global match fails, Perl resets the position to -1, which is right before the start of the
+                    string (position 0), so the next global match starts at the beginning of the string.
+                    However, if you use the /c match operator flag, you can try a match without resetting the match
+                    position if it fails
+                    即/c在全局匹配失败时不会回到字符串开头，而是留在上次匹配成功后的位置。perl中可以用pos($string)来查看匹配的位置。
+
+                    As with any other match operation, unless you anchor your regex, the match operator will move the pattern
+                    leftward across the string looking for a match. A global match has a special anchor, the \G, that constrains
+                    the next global pattern to start at the current match position. If you wanted to check if there is
+                    whitespace right after the match position, you’d anchor the next part of the pattern with \G:
+
+                    In scalar context, a global match starts where you left off in that string
+                    The /c prevents the match operator from resetting the match position as a failure
+                    Using /gc allows you to separate alternations in separate regexes instead of one big and ugly regex
+        解析csv文件
+            s
