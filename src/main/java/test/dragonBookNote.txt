@@ -1,0 +1,25 @@
+
+Introduction
+
+    language processor
+
+        Compiler:        the compiler transfer the source code to target code
+        Interpreter:     it can do things directly according to the source code, not via target code.
+
+        compiler's target code is running faster than interpretering,
+        however, interpreter is executed line by line,so its error diagnostic effection is better.
+
+        jvm can interpreting  the byteCode, but it also has JIT(just in time) compiler,
+        it can compile the bytecode to machine code and then run it.
+
+        because assembly language is easy to debug and output, so it is used as target code of compiler.
+
+    the structure of a compiler
+
+        analysis:       (front end)word components and middle expression,symbol table
+        synthesis       (back end)generate the target code according the analysis result
+
+        lexical analysis(scanning)
+            transfer the source code to small components:<token-name, attribute-value>
+            token name is an abstract symbol,and attribute-value is the serialNo of this item
+            in symbol table.
