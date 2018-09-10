@@ -1116,6 +1116,13 @@ chapter 6 crafting an efficient expression
     A global view of backtracking
         more work for posix nfa
         work required during a non-match
-        a
-
+            if use the regex ".*"! to match text sdf"sdf"asdfd"sdfsd"sd
+            it will try from the first quote and track back several times, then failed, bump along to
+            next quote and repeat the process again to the end, until then it will report failure.
+        Being more specific
+            using "[^"]*" to replace ".*" can reduce much more matching and subsequent backtracking.
+        alternation can be expensive
+            such as regex u|v|w needs more backtracks than a character class [uvw].
+        benchmarking
+            d
 
