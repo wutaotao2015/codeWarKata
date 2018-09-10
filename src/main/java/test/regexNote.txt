@@ -1100,7 +1100,22 @@ chapter 6 crafting an efficient expression
         but in posix nfa,this regex needs a huge amount of time to run,because it needs to try all possibilities and +,* are both
         functioning.
 
+    reality check
         "exponential" matches
-            sd
+            because the regex ([^"\\]+)* has many combinations, for each target string character it has two
+            possibilities(+ and *),for example, text "qwerer" can mean + matches 1 character and 6 *
+            iteration, or + matches 2 characters and 3 * iteration,etc.This is called exponential matches
+            or super-linear matches.
+
+            traditional nfa will stop at the first full match,but it also has this problem, it may take
+            a long time to the right match or report failure.But DFA is text-directed and keeps all the
+            possibilities,so it will be fast.
+
+            so this kind regex ([^"\\]+)* can reflect the regex engine type in some extent.
+
+    A global view of backtracking
+        more work for posix nfa
+        work required during a non-match
+        a
 
 
