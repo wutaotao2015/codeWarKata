@@ -1124,5 +1124,29 @@ chapter 6 crafting an efficient expression
         alternation can be expensive
             such as regex u|v|w needs more backtracks than a character class [uvw].
         benchmarking
-            d
+            we need to repeat the matching process to make the time cost long enough to make sense,like
+            other performance tests. And the real work part matters more importantly than the non-work
+            part.
+            while($count-- > 0) {
+                $testString =~ m/^(a|b|c|d)+$/;
+            }
+            if the count is too big, then it will cost more overhead like the update and test of variable
+            count, and the setup of the regex engine, the extra work of the capturing parenthesis.
 
+            benchmarking with java
+                Matcher regex1 = Pattern.compile("^[a-z]+$").matcher("");
+            while(--count > 0) {
+                regex1.reset(testString).find();
+            }
+            the time is influenced by the compiler speed.And after long enough time,the code will become
+            hot for the vm,and the time cost will be slightly shorter.
+
+    Common Optimizations
+        Doing something faster
+        Avoiding work
+
+        No free lunch
+            \b\B optimization to report failure fastly can save a lot,but it is very rare,so
+            it is not worth to optimize this.
+        everyone's lunch is different
+            d
