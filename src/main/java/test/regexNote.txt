@@ -1086,21 +1086,21 @@ chapter 6 crafting an efficient expression
     A sobering example
         (\\.|[^"\\])* to match the content between the quotes and it can have escaped quote.
         every normal word(non-quote and non-escape character) has to fail the \\. it's inefficient.
-    a simple change - placing your best foot ahead
+    A simple change - placing your best foot ahead
         swap the alternatives like ([^"\\]|\\.)* obviously removes the backtracking times, as there are more normal words.
         posix nfa try all the alternatives,so this order change has no effect.
         and when there's a match,the traditional nfa indeed increase performance(less backtracking),but it's the same when
         there are no mactches at all, because it must have tried all the alternatives.
-    efficiency vs correctness
+    Efficiency vs correctness
         you should comfirm the correctness of the regex before change it because of the efficiency.
-    advancing furthur-localizing the greediness
+    Advancing furthur-localizing the greediness
         for regex ([^"\\]|\\.)* every normal word has to enter into and out of the parenthesis,it costs more(the engine need to
         keep track the text which matches inside the parenthesis).
         So turn into ([^"\\]+|\\.)* add a plus can reduce the star iteration and improve performance.
         but in posix nfa,this regex needs a huge amount of time to run,because it needs to try all possibilities and +,* are both
         functioning.
 
-    reality check
+    Reality check
         "exponential" matches
             because the regex ([^"\\]+)* has many combinations, for each target string character it has two
             possibilities(+ and *),for example, text "qwerer" can mean + matches 1 character and 6 *
@@ -1149,4 +1149,18 @@ chapter 6 crafting an efficient expression
             \b\B optimization to report failure fastly can save a lot,but it is very rare,so
             it is not worth to optimize this.
         everyone's lunch is different
-            d
+            different engines have different implementation ways for same optimization,
+            one change is faster for one kind engine and slower for another.
+        The mechanics of regex applications
+            1. regex compilation
+            2. transmission
+            3. component tests
+            4. finding a match
+            5. transmission bump-along
+            6. overall failure
+        Pre-Application Optimizations
+            compile caching
+                compile caching in the integrated approach
+                    perl and awk are integrated approach,the regex is cached the first time executed.
+                compile caching in the procedural approach
+                    s
