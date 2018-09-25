@@ -1237,4 +1237,61 @@ chapter 6 crafting an efficient expression
                 lead the engine to a match
                     th(?is|at) is mathched more quickly than this|that,we should
                     do so to lead more quickly match.
-                sd
+            Common sense techniques
+                avoid recompiling
+                use non-capturing parentheses
+                don't add superfluous parentheses
+                don't use superfluous character classes
+                use leading anchors
+            Expose literal text
+                "factor out" required components from quantifiers
+                    use xx* instead of x+
+                "factor out" required components from the front of alternation
+                    use th(?:is|at) instead of this|that
+            Expose anchors
+                expose ^ and \G at the front of expressions
+                    ^(?:abc|123) is better than ^abc|^123
+                    ^(abc) is better than (^abc)
+                expose $ at the end
+            Lazy versus Greedy: Be Specific
+                depends on the situation,lazy for the front,greedy for the end and the random position.
+            Split into multiple regular expressions
+                sometimes the optimizations needed to kick in just don't,we can do it ourselves with
+                another expression.
+            Mimic initial-character discrimination
+                we can prepend look-ahead ourselves to mimic this
+                don't do this with tcl
+            Use Atomic Grouping and Possessive quantifiers
+                ^[^:]+: can be replaced by ^[^:]++: or ^(?>[^:]+):
+                it can avoid unfruiteful backtrackings
+            Lead the engine to a match
+                put the most likely alternative first
+                distribute into the end of alternation
+                    this optimization can be dangerous,because it maybe defeat other native optimizations
+            Unrolling the loop
+                method 1: building a regex from past experiences
+                    from "(\\.|[^"\\]+)*" examples we can get the pattern
+                    "[^"\\]+(\\.[^"\\]+)*"
+
+                    constructing a general "unrolling-the-loop" pattern
+                        to match examples with escaped characters beginning and escaped characters in a row,
+                        we can get "[^"\\]*(\\.[^"\\]*)*",and by emptify each star we can prove it's ok.
+                    the real "unrolling-the-loop" pattern
+                        the pattern is
+                        opening normal* (special normal*)* closing
+
+                        Avoiding the neverending match
+                            the start of special and special must never intersect
+                                when they are not intersected, the special normal* sequence is much more
+                                efficient and avoid never ending match.
+                                the special acts like checkpoints, preventing (normal*)* various combinations.
+                            special must not match nothingness
+                                the special can be null and lose the checkpoint's function
+                            special must be atomic
+                                this means text matched by one application of special can't be matched
+                                by mutiple applications of special at the same time,it lead back the
+                                original problem.
+                            general things to look out for
+                                df
+
+
