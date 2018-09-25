@@ -1159,8 +1159,82 @@ chapter 6 crafting an efficient expression
             5. transmission bump-along
             6. overall failure
         Pre-Application Optimizations
+
             compile caching
                 compile caching in the integrated approach
                     perl and awk are integrated approach,the regex is cached the first time executed.
                 compile caching in the procedural approach
-                    s
+                    gnu,tcl keeps a cache of recently used expressions,if not used,it is compiled from scratch.
+                compile caching in the object-oriented approach
+                    java, python, .net can compile regex according to the user.
+                pre-check of required character/substring optimization
+                    we can check single required word in target text,most time the multiwords' check is thwarted
+                    by alterantion. th(is|at) is better than this|that
+                length-cognizance optimization
+                    \d{3} the target text has at least 3 digits
+
+            Optimizations with the transmission
+
+                start of string/line anchor optimization
+                    ^(this|that) is better than ^this|^that,and it can match ^ only in location where ^ is.
+                implicit-anchor optimization
+                    regex starts with .* or .+ can prepend ^ to the beginning.but within parenthesis,we need
+                    to be careful.
+                end of string/line anchor optimization
+                    regex test(34)?$ can match at most 6 characters from the end,so the transmission can
+                    jump directly to that spot.
+                Initial character/class/substring discrimination optimization
+                    [this|that|other] can match text starting with [ot].
+                Embedded literal string check optimization
+                    similar to the upper one,but the string can be inside the text,but it need
+                    a fixed distance.
+                length-cognizance optimization
+                    same to the upper length-cognizance optimization
+
+            Optimizations of the regex itself
+
+                literal string concatenation optimization
+                    regex abc be treated as one part,not a,b,c
+                simple qunatifier optimization
+                    with this optimization,engine can deal with .* faster than (?:.)*
+                needless parentheses elimination
+                    (?:.)* is same with .*
+                needless character class elimination
+                    [.] turns into \.
+                character following lazy quantifier optimization
+                    regex .*?sd checks the target text for sd, until then the lazy quantifier .*? act
+                    like greedy ones.
+                "excessive" backtracking detection
+                    regex (.+)* can make exponential backtrackings,we can limit the size of
+                    total backtrackings or the size of the stack of backtrackings.
+                    But they all can limit some of the normal use of regexes like .*? ,
+                    so we should know about this limit.
+                exponential(super-linear) short-circuiting
+                    a quantifier loops more times than the characters' size is a sign of exponential
+                    match.Like the (.+)* grouping(12 words group by 2*6,3*4),we can keep track
+                    of the positions each subexpression and avoid repeating attemps.
+                    but detect and eliminate redundant matches is tough.
+                    this optimization may hide the inefficiency of the regex,as it failed quickly.
+                state-suppression with possessive quantifiers
+                    we don't need the remove all the previous states after the possessive
+                    quantifier end its course,we can remove extra states on the fly,and leaves
+                    one state to go back while matching failed,it can save a lot of memory.
+                small quantifier equivalence
+                    for perl,python,.net \d{3} is 20% faster than \d\d\d, and
+                    in java and ruby, \d\d\d is faster.
+                    === literal character can use the optimization above.
+                need cognizance
+                    tcl capturing parentheses really captures when asked, and .net
+                    can make the user indicate not to capture.It can save overhead.
+
+            Techniques for faster expressions
+
+                write to the optimizations
+                    xx* can use more optimizations than x+
+                mimic the optimizations
+                    add (?=t) to the beginning of (this|that) mimic the initial-character
+                    discrimination optimization
+                lead the engine to a match
+                    th(?is|at) is mathched more quickly than this|that,we should
+                    do so to lead more quickly match.
+                sd
