@@ -1269,6 +1269,7 @@ chapter 6 crafting an efficient expression
                 distribute into the end of alternation
                     this optimization can be dangerous,because it maybe defeat other native optimizations
             Unrolling the loop
+
                 method 1: building a regex from past experiences
                     from "(\\.|[^"\\]+)*" examples we can get the pattern
                     "[^"\\]+(\\.[^"\\]+)*"
@@ -1281,7 +1282,7 @@ chapter 6 crafting an efficient expression
                         opening normal* (special normal*)* closing
 
                         Avoiding the neverending match
-                            the start of special and special must never intersect
+                            the start of special and normal must never intersect
                                 when they are not intersected, the special normal* sequence is much more
                                 efficient and avoid never ending match.
                                 the special acts like checkpoints, preventing (normal*)* various combinations.
@@ -1292,6 +1293,87 @@ chapter 6 crafting an efficient expression
                                 by mutiple applications of special at the same time,it lead back the
                                 original problem.
                             general things to look out for
-                                df
+                                the valid (*)* all have checkPoints inside
+                nethod 2: A top-down view
+                    common normal parts end, we can expect special part like escaped character or
+                    ending quote, after escaped character we get another normal part and we can
+                    start again making choice about excaped and ending quote,thus we can get the
+                    same regex like method 1.
 
+                method 3: An Internet Hostname
+                    the example is similar to the hostname,we can think it as sequences of
+                    non-escaped stuff seperated by escaped items.There are some difference
+                    between them such as the beginning and ending can't have delimiters, the
+                    delimiters can't put in a row, but they are the same class in this view.
 
+            Observations
+
+                "[^"\\]*(\\.[^"\\]*)*"
+                pitfalls: readability, maintainability
+                benefits: speed, more speed
+
+            Using Atomic Grouping and Possessive Quantifiers
+                making a neverending match safe with possessive quantifiers
+                    for regex ([^"\\]+|\\.)* it's ok to possessify both the + and * outside
+                making a neverending match safe with atomic grouping
+                    (?>(...|...)*) is same to (...)*+, not (?>...|...)*, the latter didn't
+                    throw away the *'s states.
+            Short unrolling examples
+                unrolling "multi-character" quotes
+                unrolling the continuation-line example
+                unrolling the csv regex
+                unrolling C comments
+                    to unroll or not to unroll
+                        lazy-quantifier make matching c comments /\*.*?\*/ easier and faster
+                        than unrolling technique,but it's still useful in case lazy-quantifier
+                        is not supported or optimizations mixing are not fast enough.
+                    avoiding regex headaches
+                        to be able to read more easily,turn /**/ to /xx/
+                        /x[^x]*x/
+                    a direct approach
+                        /x(?:(?!x/).)*x/ using look-ahead can solve this,but it's slow,and
+                        if it can support look-ahead,it will support lazy quantifier.
+                        take x and / separately
+                        regex1: /x([^x]|x[^/])*x/    wrong for /xx foo xx/
+                        regex2: /x([^/]|[^x]/)*x/    wrong for /x/ foo /x/ and /xfoox//s
+                    making it work
+                        for /x([^x]|x[^/])*x/
+                        (x[^/])* can match the ...xxx/ while the / match the [^x]
+                        we can make it (x+[^/])*, but the [^/] can still match x, when
+                        backtracks, it still match xxx.
+                        so we can make it like (x+[^/x])*, thus it will match xxxa,
+                        but when come to xxx/,x+ match xxx, and [^/x] can't match /,
+                        so it backtracks all the way to the beginning of xxx/,
+                        so we have to change the end to x+/,so the final regex is
+                        /x([^x]|x+[^/x])*x+/,and we can change x to \* to make it really work.(not
+                        needed in character class)
+                    unrolling the c loop
+                        the normal part here is [^x]*x+, special part is [^/x]
+                        regex is /x[^x]*x+([^/x][^x]*x+)*/
+
+                        return to reality
+                            for egrex, multiline comment is a problem
+                            and to some c programme sentences(like "/*"), it may falsely matched as a comment.
+
+            The Freeflowing Regex
+
+                A helping hand to guide the match
+                    in perl:
+                    $comment = qr{/\*[^*]*\*+(?:[^/*][^*]*\*+)*/};
+                    $double = qr{"(?:\\.|[^"\\])*"};
+                    $text =~ s/($double)|$comment/$1/g;
+                A well-guided regex is a fast regex
+
+                    $other = qr{[^"'/]};
+                    ...
+                    $text =~ s/($double|$single|$other+)|$comment|$comment2/$1/g;
+
+                    keep the quotes and normal c code, remove the comment parts.
+                    we can furthur optimize the alternative to
+                    s/($other+|$double$other*|%single$other*)|$comment|$comment2/$1/g;
+                Wrapup
+                    use unroll-the-loop technique to optimize the double quote and single quote
+                    and the perl's qr/.../ operator make it quite simple to build a regex.
+
+            In summary: Think!
+                d
