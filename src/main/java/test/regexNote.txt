@@ -1376,4 +1376,121 @@ chapter 6 crafting an efficient expression
                     and the perl's qr/.../ operator make it quite simple to build a regex.
 
             In summary: Think!
+
+Chapter 7 Perl
+
+    in this chapter
+    perl in earlier chapters
+
+    Regular Expressions as a language component
+        perl's greatest strength   rich in small set
+        perl's greatest weakness   tiny change get special case
+
+    Perl's Regex Flavor
+        no possessive quantifiers?
+    Regex operands and regex literals
+
+        $matchfield = "^Subject:";
+        if($test =~ m/$matchfield/)
+        or if($test =~ $matchfield)
+
+        Features supported by regex literals
+            1. variable interpolation  $ and @(array)
+            2. named unicode characters
+            3. case-folding prefix    \l \u used before interpolation variables
+            4. case-folding span      \L \U...\E characters lowercase or uppercase between
+            5. literal-text span      \Q...\E   can't quote variable interpolation,means we can use
+                \Q$input\E to put the user's input to the regex.
+            6. overloading
+        picking your own regex delimiters
+    How Regex Literals are parsed
+    Regex Modifiers
+        /i  neglect the letter case
+        /x  comment mode
+        /s  dot-match-all mode(including the newline)
+        /m  multiline mode(influencing the $)
+        /o  compile only once
+    Regex-related Perlisms
+        context
+        dynamic scope   protect a global variable by copying it and restore it later
+
+        Expression context
+            m// may return true or false in scalar context or a list of results in list context
+        Contorting an expression
+            perl may contort the expression value to fit the context
+    Dynamic scope and regex match effects
+        global and private variables
+            regular user variables are global unless declared with 'my'
+        dynamically scoped values
+            local function does 3 things
+            1. save a copy
+            2. assign a new value to the variable
+            3. restore the old value back when running off the block that contains the local function
+        a better analogy: clear transparencies
+            local is put a transparency over variable,when it's over,it removed the cover
+            and any change made on it.
+            And regex side-effect variables is automatically dynamically scoped(local)
+        regex side effects and dynamic scoping
+            $&(text matched) $1(parenthese captured) is dynamically scoped.
+            subroutine called creates its own dynamic scope, so it will not change the value
+            of outside variable value.
+        dynamic scoping vs lexical scoping
+            we can only local a global variable, it's an action; my is both an action and declaration.
+
+    Special variables modified by a match
+        $&   a copy of test successfully matched,performance is bad
+        $`   the text before the match's start
+        $'   the text after the successful match
+        $1  (\w+) for tubby  $1 is tubby, (\w)+ is letter y
+            (x?) may be x or empty string, (x)? may be x or undefined
+        $+  a copy of the highest numbered $1,$2,etc  one has value and the highest number
+        $^N  a copy of mostly recently closed $1,$2,etc
+        @- and @+   $-[0] is the index where the match started, $+[0] is the end index of match
+                    $-[1] and $+[1] is the captured $1 offsets
+        $^R  the most recently value with the match path to the current location
+        using /g all these variables will refresh,so the $1 in replacement will take effect.
+
+        using $1 within a regex
+            $1 within regex has nothing to do with current match
+
+    The qr/.../ operator and regex objects
+        Building and using regex objects
+            match modes are very sticky
+                once regex object is created, its match mode will not change again.
+                qr/\b \w+ \b/x actually creates (?x-ism:\b \w+ \b) x is turned on ,ism is off
+        Viewing Regex Objects
+            directly print a regex object will show the (?x-ism) above
+        Using regex objects for efficiency
+    The Match operator
+
+        stringOperand =~ regexOperand
+
+        Match's regex operand
+            using a regex literal
+                modifiers besides ixsmo,we can add /g /c
+            using a regex object
+                can be a regex object created by qr/../
+                my $regex = qr/.../;
+                if($text =~ $regex) {}
+                or if($text =~ m/$regex/) {}  this one can use /g,other modifiers are useless because
+                                             the regex object lock its modifiers inside
+            the default regex
+                obsolete because of the regex object
+            special match-once ?...?
+                not used today
+        Specifying the match target operand
+            expr =~ m/.../ is expression itself
+            so we can $result = $text =~ m/.../;
+
+            the default target
+                $_ is default target, $_ =~ m/.../ can be directly m/.../,omitting the $_ =~
+                so $text = m/.../ equals to $text = ($_ =~ m/.../) and the $text value is true or false
+            negating the sense of the match
+                $text !~  m/.../ equals to not $text =~ m/.../
+                the side effect of matching still happens
+        Different uses of match operator
+
+            normal "does this match?" - scalar context without /g
+                if($text =~ m/.../){}
+            normal "pluck data from a string" - list context,without /g
                 d
