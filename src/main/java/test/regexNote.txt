@@ -1408,7 +1408,8 @@ Chapter 7 Perl
         /i  neglect the letter case
         /x  comment mode
         /s  dot-match-all mode(including the newline)
-        /m  multiline mode(influencing the $)
+        /m  multiline mode(influencing the ^$) ^ matches the beginning of string,if used /m,it means the beginning
+            of newline, similarly, $ matches the end of string, if used /m, it means before any newline.
         /o  compile only once
     Regex-related Perlisms
         context
@@ -1493,4 +1494,34 @@ Chapter 7 Perl
             normal "does this match?" - scalar context without /g
                 if($text =~ m/.../){}
             normal "pluck data from a string" - list context,without /g
-                d
+                my $(word) = $text =~ m/(\w+)/;   $(word) provides a list context,it gets the word matched
+                my $word = $text =~ m/(\w+)/;    $word provides a scalar context, it gets true or false
+                if(my($year, $month, $day) = $date =~ m{ (\d+) / (\d+) / (\d+) }) {}else{}
+                the my(...) provides a list context and the if statement requires a scalar context(true or false)
+                so if it matches, it gets the 3 variables, if it doesn't, it will enter into else part.
+            "pluck all matches" - list context,with the /g modifier
+                fetech all integers in a string
+                my @nums = $text =~ m/\d+/g;
+                each match put a num to the nums array.
+                float point num:  my @nums = $text =~ m/\d+(?:\.\d+)?|\.\d+/g;
+
+                perl tutorial:
+                    https://learnxinyminutes.com/docs/perl/
+                    https://www.guru99.com/perl-tutorials.html#2
+                iterm2 shortKeys:
+                    next pane: cmd+]
+                    next window: alt+n
+            Iterative Matching: scalar context,with /g
+                m/.../g only matches one time like m//,and it begins its matching attemp from the current position
+                where /g indicated.Used usually in condition of while loop.
+
+                while($configData =~ m/^(\w+)=(.*)/mg){   # m makes the ^ matches the line beginning,/g makes iterating
+                    my ($key, $value) = ($1, $2);         # . can't match \n(not using /s), so it get value to the line end
+                }
+
+                if matching failed, the result is false, loop finishes, the /g state is reset.
+                while($text =~ m/(\d+)/) {} is endless loop
+                while($text =~ m/(\d+)/g) {} get next number in turn in $text
+
+                the current match location and the pos() function
+                    s
