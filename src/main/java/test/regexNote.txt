@@ -1524,4 +1524,26 @@ Chapter 7 Perl
                 while($text =~ m/(\d+)/g) {} get next number in turn in $text
 
                 the current match location and the pos() function
-                    s
+                    the match position is a property of string, we can get it by calling pos($text),
+                    and /g will get this position to match afterward.
+                pre-setting a string's pos
+                    we can use pos($text) = 32 to indicate the position we really want beginning to match.
+                    But it can bump along to make a mistake.
+                    Like m/^.{32}(\S+)/ and m/(\S+)/g
+                using \G
+                    \G is the anchor to where the previous match ended.
+                    m/\G(\S+)/g
+                    \G tells the engine don't bump along,and it only works fine to be the first thing in regex,
+                    it can't work in top-level alternation.
+                "Tag-team" matching with /gc
+                    /gc can make the engine not to reset the matching position when /g failed.
+                    it is usually used with \G, as m/\G.../gc, it can test different conditions
+                    with different regexes at the same location.
+                    There should be one condition matching successfully each loop time, or it will become
+                    endless loop; And the conditions sequence should be considered properly, in case
+                    one condition's successful match affects others'.
+                Pos-related summary
+                    modifying a string in any way reset its pos value to undef-the start of string.
+
+        The Match Operator's Environmental Relations
+            s
