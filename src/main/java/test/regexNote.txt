@@ -1514,6 +1514,7 @@ Chapter 7 Perl
             Iterative Matching: scalar context,with /g
                 m/.../g only matches one time like m//,and it begins its matching attemp from the current position
                 where /g indicated.Used usually in condition of while loop.
+                if used once, m/.../g is same as m/.../,the position will have no impact.
 
                 while($configData =~ m/^(\w+)=(.*)/mg){   # m makes the ^ matches the line beginning,/g makes iterating
                     my ($key, $value) = ($1, $2);         # . can't match \n(not using /s), so it get value to the line end
@@ -1546,4 +1547,229 @@ Chapter 7 Perl
                     modifying a string in any way reset its pos value to undef-the start of string.
 
         The Match Operator's Environmental Relations
-            s
+            the match  operator's side effects
+                successful match:
+                    $1, default regex, m?..?
+                always in effect:
+                    pos, /o
+            Outside influences on the match operator
+                context
+                pos
+                default regex
+                study
+                m?...? and reset
+            keeping your mind in context(and context in mind)
+
+    The substitution operator
+
+        $text =~ s/regex/replacement/modifiers
+
+        the replacement operand
+
+            the replacement operand is parsed usually as double quoted string after successful match.
+            so the $1 can be used in replacement operand to get each match's result.
+
+            there are two situations it is not done so:
+                1. replacement operand delimiter is single quote, then variable can't be interpolated.
+                2. using modifier /e,then the replacement operand is one perl script,its execution result
+                    will be the real replacement text.
+            the /e modifier
+                the code is evaluated afresh after each match
+                    $text =~ s/-time-/localtime/ge;
+            multiple uses of /e
+                one more /e modifier means evaluate the code's result as code, and get the result's result
+                as replacement. The example below mimic the variable interpolation process.
+
+                $text =~ s/(\$[a-zA-Z_]\w*)/$1/gee;
+
+        context and return value
+            the substitution operator returns the replacement time it has performed,if none it returns an
+            empty string,when in boolean context, it returns true or false depending the replacement
+            has been done or not.
+
+    The split operator(a function)
+
+        it's used as the converse of a list-context m/.../g
+
+        $text =~ m/:/g;  gets several : in a list,but split(/:/, $text) return the texts between :
+        like
+            @lines = split(m/^/m, $lines);
+        it break a string to its logical lines.
+
+        special cases:
+            split(//, $text) returns each character of the $text,
+            split(" ", $text) acts like m/\s+/, ignoring the leading and trailing whitespaces
+
+        Basic Split
+
+            split(match operand, target string, chunk-limit operand)
+
+            it's always used in list context
+            basic match operand
+                similar to the regex operand of match operator, only core modifiers are supported.
+                but we can only use (?:) non-capturing parenthesis for grouping, because the
+                capturing parenthesis in split turn on a special feature.
+            target string operand
+                the target string is not modified, and $_ is default target string.
+            basic chunk-limit operand
+                it indicates the number of chunks between the matches, also the number of elements
+                in the result list with no capturing parentheses existing.
+                when the result's elements is smaller then the limit, nothing extra is added, but it
+                has a big difference with one of no chunk-limit.
+            advanced split
+                returning empty elements
+
+                    trailing empty elements
+                        by default, split does not return empty elements at the end of list.
+                        @nums = split(m/:/, "12:23:::");
+                        and @nums is "12" "23"
+                    the chunk-limit operand's second job
+                        any non-zero chunk limit preseves trailing empty items.(0 chunk limit is useless)
+                        and -1 as limit is treated as a very large one.
+                            my @nonEmpty = grep {length} split(/:/, $text)
+                        can return list with no empty elements.
+                    special matches at the ends of the string
+                        if we can match text at the ends of string, empty elements will be produced,
+                        like split(/:/, ":ss:w"); will get "","ss","w".
+                        But if we don't match any text(0-length),like split(/\b/,"a b"); it will not produce
+                        empty string at the beginning or end of the list.
+                        in previous examples, @lines = split(/^/, $lines) we use print "$_," for @lines
+                        and we don't get , at the beginning of result.
+
+                split's special regex operands
+
+                    if no regex operand is given,then the default one is ' ', so just split is same to
+                    split(' ', $_, 0)
+
+                    split has no side effects
+
+                split's match operand with capturing parentheses
+
+                    the capturing parentheses' captured text will be added to the result list, and
+                    it is counted against the chunk limit, as the limit only counts the original
+                    splitting chunks.If capturing parentheses don't contribute to a match, the undef
+                    will be the content of element added.
+
+    Fun with Perl enhancements
+
+        below is the features only available in Perl
+
+            dynamic regex construct  (??{ perl code })
+
+               the code is executed each time the regex is applied, and the execution's result is applied as part of
+               the match.
+
+               my $text = "3XXX";
+               my $flag = $text =~ m/(\d+)(??{"X{$1}"})/;
+               print "$flag\n";
+
+               it print 1 as successful match.
+
+            the embedded-code construct (?{ arbitrary perl code })
+                this one's code doesn't need to return a result.It can be very useful in debugging.
+            regex-literal overloading
+                add your own pre-processing of regex literals, we can use it to add new features to perl
+            force match of single byte
+                dangerous, should not use it.
+
+        using a dynamic regex to match nested pairs
+            we can use regex objects to build the needed nested pairs,but it can't be arbitrary, it need to specify
+            the needed level.
+            As the pairs regex objects are the same,so we can make it recursively include itself,as really matching,
+            and when it comes to another set of pairs,it executes the code-the regex object itself-and get another
+            pairs, and at the end, it matches the other alternative-the non-parentheses one,and exit the recursive
+            process.
+
+            my $levelN;
+            $levelN = qr/ \(( [^()] | (??{ $levelN }) )*\) /x;
+            if ($text =~ m/\b( \w+$levelN )/x) {
+                print "found function call: $1\n";
+            }
+
+            the $levelN can be optimized to
+            $levelN = qr/ (?> [^()]+ | \( (??{$levelN}) \) )*/x;
+
+        using the embedded-code construct
+            useful for debugging
+
+            using embedded code to display match-time information
+                (?{ print "starting match at [$`|$`]\n" })
+            using embedded code to see all matches
+                one trick is (?!) always fails, when added it right behind the embedded code, once
+                match succeed and print the match out, it failed and execute the backtrack or
+                transmission to the final overall failure, in the meantime, the all possible matches
+                are printed out.
+            finding the longest match
+                keep a variable to record the longest match inside the embedded code,
+                and we can make this piece of code as regex object with (?!) in it, too.
+
+                    my $RecordPossibleMatch = qr{
+                        (?{
+                         if (not defined($longest_match) or length($&) > length($longest_match)) {
+                             $longest_match = $&;
+                         }
+                         })(?!)
+                    }x;
+            finding the longest-leftmost match
+                to achieve this, we need to cut off the transmission process of finding the longest match,
+                meaning once we find a match from the left-starting position,we can go backtracking to
+                find the longest one from the same starting point,but we can't bump along to go on
+                matching, as it isn't leftmost.So once one match is found and $longestMatch is defined,
+                we should inhibit the bump along.
+            using embedded code in a conditional
+                use the conditional  (? if then | else) in this example,| else can be omitted.
+
+                my $BailIfAnyMatch = qr/(?(?{defined $longest_match})(?!))/;
+
+                "800-998-9898"  =~ m{ $BailIfAnyMatch \d+ $RecordPossibleMatch }x;
+
+                from this example,we can get this:
+
+                    NFA is regex-oriented, once it 'complete' the regex, it means it matches successfully,
+                    so we can put embedded code in the end to print the match result, it failed as the text
+                    can't match, so it won't get to the end.
+
+                    As it failed, it will need to bump along, so the regex need to go back to the start of the
+                    regex to match afresh.So we put the $BailIfAnyMatch with (?!) in it to prevent the
+                    bump along, right after the $RecordPossibleMatch has found the longest match, and before
+                    go back to start, it must have backtracked the text as \d+ left behind.So in this way,
+                    we found the leftmost-longest match(first left then through backtracking find the longest
+                    one from the same start).
+
+        using local in an embedded-code construct
+
+            when a variable is localized in regex, its value will turn to original value when the
+            the code failed to match because of backtracking.
+
+            we can put the local variable's value to non-localized value at the end of the regex to
+            save the localized value for using afterwards.
+
+        a warning about embedded code and my variables
+
+            when the regex compiled,its code will bound its my variable with its active value(called
+            closure), so if we compiled it once,and called it many times,it will generate problems,so
+            we should avoid calling outside my variables within embedded code in regex, unless
+            we are sure about its compiling and variable instances are accordant.
+
+        matching nested constructs with embedded code
+
+            dynamic regex quitely simply finds the nested pairs,but we can also get it done by
+            embedded code, using a count variable to record the opening parentheses and decrease
+            one by one by matching the closing parentheses, and checking the value equalling zero
+            at the regex end to judge it matching, if it is, do nothing to let the match succeed,
+            if it is not, using (?!) to make it fail.
+
+        Overloading regex literals
+
+            adding start- and end-of-word metacharacters
+                using perl's overloading mechanic to overload the regex literals to replace the
+                \< to (?!<\w)(?=\w) and \> to (?<=\w)(?!\w)
+
+                use overload;
+                sub import {overload::constant qr => \&ReplaceRegexLiterals}
+                sub ReplaceRegexLiterals($){
+                    ...
+                }
+                1;  # for "use" to return true
+            adding support for possessive quantifiers
+                s
