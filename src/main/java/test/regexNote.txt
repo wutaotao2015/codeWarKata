@@ -1772,4 +1772,33 @@ Chapter 7 Perl
                 }
                 1;  # for "use" to return true
             adding support for possessive quantifiers
-                s
+                we can mimick the possessive quantifiers using atomic grouping like turning
+                regex*+ to (?>regex*),so we can use regex literals overloading to do this:
+
+                    $text =~ s/ ( \( $levelN \) [?*+]  )\+ /(?>$1)/gx;
+
+            problems with regex literals overloading
+                regex literals overloading can't get the interpolated parts, such as example
+                like m/($Mystuff)*+/, the regex literals get the '(' and ')*+' 2 parts alone
+                as calling overloading twice, but it need to get them together to take action.
+                so any string or regex object can't be used.and it can't know the modifier like
+                /x, and inhibit the unicode name of characters.
+            mimicking named capture
+                the basic named capture example:
+                    href\s*=\s*($HttpUrl)(?{ $url = $^N })
+                using dynamic regex to get nested parentheses like $levelN, then
+                we can  using \e to execute code in replacement part, in the code
+                part, we get the named part as $1, the parenthesize part as $2,
+                then we can call the outside function to repeat the capture process to deal with
+                $2 until it is null.For each step of recursive process we get the captured value
+                to local hash %^T, and we use another subroutine to define this local hash at the regex
+                beginning and put it to self_defined %^N to let outsiders to use %^N{num} to get the
+                specific captured parentheses.
+
+    Perl Efficiency Issues
+
+        general optimizations apply as well, but there are some perl-specific issues.
+
+        there's more than one way to do it
+            there are various ways to deal with one issue, their efficiencies are quite different,
+            using \e in replacement is always bad in performance.
