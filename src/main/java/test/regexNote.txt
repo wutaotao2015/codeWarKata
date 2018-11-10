@@ -1802,3 +1802,143 @@ Chapter 7 Perl
         there's more than one way to do it
             there are various ways to deal with one issue, their efficiencies are quite different,
             using \e in replacement is always bad in performance.
+        regex compilation, the /o modifier, qr/.../, and efficiency
+            the internal mechanics of preparing a regex
+                1. regex literals processing
+                2. regex compilation
+            perl steps to reduce regex compilation
+                unconditional caching
+                    if regex is static without variable interpolation, it will be cached unconditional.
+                on-demand recompilation
+                    if the interpolated value has same result each time regex compiled, it will be meaningless
+                    to recompiled it time and time again, so perl examine the regex string result after
+                    interpolation and compare it to the previous one, if it is the same, it will skip
+                    recompiling to use previous compile result, thus can save a lot.
+            the "compile once" /o modifier
+                if we only want the interpolated value to be used when it's first interpolated, we can just
+                add /o modifier to the regex to skip the interpolation and recompile process when processed
+                again later.
+            potential "gotchas" of /o
+                if we put the regex with /o modifier to a function, as it is compiled once, each time we
+                call the function, it will get the same result, which usually is not what we need.
+            Using regex objects for efficiency
+                we can put the interpolated variable to one regex object, then with each function call, it
+                will get a new regex object, and using this object, it the matching process, it undergoes
+                none of the pre-processing, as it is done when the regex object is created. A regex object
+                is one ready-to-use compiled regex.
+            using m/.../ with regex objects
+            using /o with qr/.../
+            using the default regex for efficiency
+        understanding the "pre-match" copy
+            pre-match copy supports $1, $&, $', $+...
+
+                instead of creating real variables like $1 during match, perl just copy the text and
+                remember the location, it requires less work up-front.
+
+                because the original text to be matched can be changed during or after the match process,
+                so perl has to copy the text to refer to when using the variables like $1 afterwards.
+
+            the pre-match copy is not always needed
+                the variables $',$& and $' are naughty
+                    using one time of these variables make the pre-match copy process inevitable.Without
+                    them, if there are not caputuring parentheses in the regex, perl will not do the copy
+                    work.
+                How expensive is the pre-match copy
+                    when dealing with huge string, it will cost much before matching.
+                avoiding the pre-match copy
+                    never use naughty varibles
+                        to use the no-copy optimizations, we can replace $& with substr(target, $-[0],
+                        $+[0] - $-[0]), similar to $' or $'.
+                        replacing $& with $1 and capturing parentheses don't save anything, it still need
+                        copy work.
+                    don't use naughty modules
+                        if you use modules that have these naughty variables inside, it will also be impossible
+                        to avoid copy.
+
+        the study function
+            study function's optimization effect depend on the matching regex
+
+            when not to use study
+                using /i in regex eliminates the benefit
+                the target string is short
+                only a few matches needed
+                having not exposed literal text in regex
+            when study can help
+                matching against large string with many different matches before it is modified.
+        benchmarking
+        Regex debugging information
+            runtime debugging information
+            other ways to invoke debugging messages
+
+    Final comments
+        there are some features this author recommending the perl support.
+        named capture
+        class set operation: [a-z]&&[^aer]
+        possessive quantifiers
+        "cut" operator \v which can flush any saved states that currently exist
+        \V to prohibit further bump along instead of troublesome (?!)
+        more control over embedded code interpolating into a regex
+        perl 6 (quite different from perl 5 and is still developing)
+
+Chapter 8 java
+
+    judging a regex package
+        technical issues
+            engine type
+            rich flavor
+            unicode support
+            how flexible
+            how convenient
+            jre requirements
+            efficient
+            does it work
+        social and political issues
+            documented
+            maintained
+            support and popularity
+            ubiquity
+            licensing
+    object models
+        a few abstract object models
+            an "all-in-one" model
+                each regex becomes a object for doing everything: judging matching result, searching
+                result status, etc.
+
+                twist here is to clone the object for saving the matching status to be used later.
+            A "match state" model
+                convert a regex string to a pattern object, then give a target string to pattern object
+                to get one matcher object to connect the two parts, then query matcher object to get
+                the matching result and other status.
+
+                twist here is to reset the matcher with one new target string, so we can omit the new
+                matcher object step.
+            A "match result" model
+                convert a regex string to a pattern object, then give a target string to pattern object
+                to get one result object if matched successfully, then query the result object for
+                specific information.
+
+                twist here is to return null when matching failed then result object says "no".
+        growing complexity
+            when facing replacing or split operations, it will become more complicated.
+    packages, packages, packages
+        sun
+        ibm
+        oro
+        jregex
+        pat
+        gnu
+        regexp
+
+        why so many "perl5" flavors?
+            perl5 regex expression is innovative and popular.
+        lies, damn lies, and benchmarks
+            warning: benchmark results can cause drowsiness!
+            and the winner is ...
+                sun packages did most things well
+            recommendations
+                java.util.regex has a strong core engine, but its interface functions are not
+                quite convenient, but ORO, on the other hand, doesn't have a strong engine, but
+                it has convenient interface functions, so the combination would be good.
+        Sun's regex package
+            regex flavor
+                s
