@@ -1941,4 +1941,196 @@ Chapter 8 java
                 it has convenient interface functions, so the combination would be good.
         Sun's regex package
             regex flavor
+                \w [0-9z-zA-Z_]
+                lookbehind can't allow infinite possible matches, meaning it can't support
+                * and +, only ? is allowed.
+            Using java.util.regex
+            the pattern.compile() factory
+                this method can accept the regex string as first parameter, and accept the compile-time
+                options such as Pattern.CASE_INSENSITIVE as second parameter, different options can
+                be connected using '|' as the bit operator between integers.
+            pattern's matcher(...) method
+                accept the target string to get a matcher object to be used, most useful
+
+            the Matcher object
+                once you get a matcher object, you can apply the regex in various ways.
+                applying the regex
+                    find()
+                        start from the beginning, can be used multiple times, find the next match
+                    find(offset)
+                        match attempt start from the offset position
+                    matches()
+                        need the regex exactly matches the target string,meaning it will
+                        automatically wrap the regex with \A...\Z
+                        also available by string.matches() method,so using ^regex$
+                        with this method is unnecessary.
+                    lookingAt()
+                        this method always matches the target string from the beginning,
+                        meaning it automatically add a \A at the regex start.
+                Querying the results
+                    these methods return information about a successful match
+
+                    group()
+                        returns the matched text by previous regex application,same as group(0)
+                    groupCount()
+                        the number of sets of capturing parentheses
+                    group(num)
+                        returns the texted matched by the numTh capturing parenthese, if it didn't
+                        participate in the match, returns null.
+                        group(0) means the whole match, same as group(), the parenthese index start
+                        with 1.
+                    start(num)
+                        the character offset from the beginning of string to the numTh paranthese's
+                        start. return -1 if this parenthese didn't participate the match.
+                    start()
+                        the offset from the beginning to the start of match, same as start(0)
+                    end(num)
+                        the offset from the beginning to the end of match of the numTh parenthese.
+                    end()
+                        the offset to the end of the match,same as end(0)
+            Reusing Matcher objects for efficiency
+
+                reset(text)
+                    reinitializes the matcher object with the given target string, the next operation
+                    will begin from the start. If the text is omitted, then target string will remain
+                    the same but the match state will be reset to the beginning.
+                we can use like this:
+                    Matcher matcher = Pattern.compile("\"\"").matcher("");
+                and then use matcher.reset(text) to get the regex applyed to the real text other than ""
+
+            Simple search and replace
+
+                replaceAll(replacement)
+                    matcher object is reset and replace all matched text with replacement
+                        string.replaceAll(regex, replacement)
+                    equals to
+                        Pattern.compile(regex).matcher(string).replaceAll(replacement)
+                replaceFirst(replacement)
+                    matcher object is reset with the first match is replaced with replacement
+                        string.replaceFirst(regex, replacement)
+
+                with these functions, the replacement can receive special parsing:
+                $1, $2 can be used to refer to the text matched by relative captured parenthese.
+                    $0 is the whole match, it can be used to add something the matched text.
+                    and if there are 3 captured parentheses, $25 will be known as $2 and 5,
+                    and $6 will throw indexOutOfBoundException.
+                a backslash can escape the character follows.
+                    use \\ to get one \ in the replacement, and to get this \\ in java,we need to
+                    write \\\\, and if there are 12 sets of parentheses, and we want to get
+                    $1 and a '2' character afterward instead of capturing content of $12,so we must
+                    write $1\2 to get this done.
+
+                advanced search and replace
+                    appendReplacement(stringBuffer, replacement)
+                        this method is called after each match, and the stringbuffer is filled with
+                        the text before the matched substring and the replacement each match operation.
+                    appendTail(stringBuffer)
+                        this method appends the remaining text after the final match.
+                    StringBuffer result = new StringBuffer();
+                while(matcher.find()) {
+                    float cel = Float.parseFloat(matcher.group(1));
+                    int f = (int)(cel * 9/5 + 32);
+                    matcher.appendReplacement(result, f + "F");
+                }
+                matcher.appendTail(result);
+                System.out.println(result.toString());
+
+            Other Pattern methods
+
+                pattern.matches(pattern, text)
+                    same to the Matcher.matches, need exactly matching, but it only returns boolean value,
+                    if need to set the compile options and other information, we need the Matcher object.
+
+                pattern's split method, with one argument
+                    split(text)
+                        get an array of text splited by text matched the pattern's regex,same as
+                        string.split(regex)
+                    empty elements with adjacent matches
+                        this one is similar to perl's split function, the beginning's matched text will
+                        generate an empty string, but if it is one zero-width match like \b, then it
+                        will not get the empty string, and empty strings appear at the end of list are
+                        suppressed like perl's, too.Similarly, if these empty strings are needed, an
+                        extra parameter as limit is needed.
+
+                pattern's split method, with two arguments
+                    split(text, limit)
+                        control over how many times regex is applied, and what is done with trailing empty
+                        elements.
+                    limit less than zero
+                        keep all trailing empty elements in the array
+                    limit of zero
+                        same as no limit, trailing empty elements are suppressed
+                    limit greater then zero
+                        this means the split method returns an array with at most limit-length, also
+                        means the regex is applied limit-1 times at most.
+                        after limit-1 times' match, the remaining text will be one whole string as the
+                        last element of the array.
+                        This way can improve efficiency, when you don't need the rest matches.
+
+        A Quick look at jakarta-ORO
+
+            quite convenient like perl
+
+            perl:  $input =~ /^regexText$/i
+            ORO:   engine.match("/^regexText$/i", input)
+
+            replace:
+
+            perl:  $text =~ s/(\d)(?=(\d\d\d)+(?!\d))/$1,/g;
+            ORO:   text = engine.substitute("s/(\\d)(?=(\\d\\d\\d)+(?!\\d))/$1,/g", text);
+
+            unlike sun's Matcher.replaceAll(replacement), ORO is more direct and simple and more perlish style.
+            But it is not efficient as it has not Pattern Object's compile object, it just has cache behind to
+            map the regex string with its regex object.
+
+            A mini Perl5Util reference
+
+                Perl5Util basics-initiating a match
+
+                    match(expression, target)
+                        return boolean value to indicate the match result.
+                        you can use your own delimiter, and the leading m is not required.
+                        modifiers can i,x,s,m
+                    substitute(expression, target)
+                        return the possibly-modified target text copy
+                        support additional modifier as g, and $1,$2, $0 and $& are supported,
+                        \U...\E, \L...\E make text between upper or lower case, \u,\l make
+                        single character upper or lower case.
+                    substitute(result, expression, target)
+                        put the possibly-modified text copy to one stringbuffer as result,
+                        and return the number of replacements actually done.
+                    split(collection, expression, target, limit)
+                        like perl, the limit is not the return list's size, but it indicates the regex
+                        should applied to target text limit minus one times.Meaning if the regex
+                        has capturing parentheses inside, then the captured text will also be
+                        the element of return list.But the leading and trailing empty strings' problem
+                        is not supported in 2.0.6.
+
+                perl5Util basic-inspecting the results of a match
+
+                    these methods are available when there hava been a successful match
+
+                    group(num)
+                        the numTh capturing parenthese's captured text, or whole match text if num is 0
+                    toString()
+                        returns the text matched-same as group(0)
+                    length()
+                        returns the length of the matched text,same as group(0).length
+                    beginOffset(num)
+                        returns the offset from the beginning of string to the start of group(num)
+                    endOffset(num)
+                        returns the offset from the beginning of string to the end of group(num)
+                    groups()
+                        the number of capturing groups, plus one(including zero)
+                    getMatch()
+                        get one match object to query all the match result info,it's convenient to
+                        save the result data.It is also available only after successful match,not
+                        after substitute or split.
+                    preMatch()
+                        returns the part before the match
+                    postMatch()
+                        returns the part after the match
+
+            Using ORO's Underlying classes
+
                 s
