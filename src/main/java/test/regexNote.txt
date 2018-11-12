@@ -2132,5 +2132,4 @@ Chapter 8 java
                         returns the part after the match
 
             Using ORO's Underlying classes
-
-                s
+                quite cubersome, not convenient as Perl5Util!
