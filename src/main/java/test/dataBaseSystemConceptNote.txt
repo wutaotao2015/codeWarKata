@@ -1,0 +1,38 @@
+Organization
+    Overview(Chapter 1)
+    part 1: relational databases
+    part 2: database design
+    part 3: data storage and querying
+    part 4: transaction management
+    part 5: system architecture
+    part 6: data warehousing, data mining, and information retrieval
+    part 7: specialty databases
+    part 8: advanced topics
+    part 9: case studies
+    appendices
+
+Introduction
+
+    1.1 database-system applications
+
+        enterprise information, banking and finance, universities, airlines, telecommunications
+
+    1.2 purpose of database systems
+
+        storing data in different files and handling them by application programs is called
+        file-processing system.It has several disadvantages:
+
+        data redundancy and inconsistency
+            same student's info may be appeared different places and modifying one place not
+            others causes inconsistency
+        difficulty in accessing data
+            when need to query specific data,we need to get results from existing list or write
+            new program, not convenient.
+        data isolation
+            files may be different forms
+        integrity problems
+            consistency constraints are difficult to maintain
+        atomicity problems
+            it's difficult to ensure atomicity in file-processing systems
+        concurrent-access anomalies
+            s
