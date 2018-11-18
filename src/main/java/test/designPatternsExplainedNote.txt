@@ -1,0 +1,103 @@
+Design Patterns Explained
+    A new perspective on Object-Oriented Design
+
+Preface
+    can understand 10 most essential design patterns from this book.
+
+    From object orientation to patterns to true object orientation
+
+        patterns are supposed to be sewn together to solve a problem.
+
+        patterns existed at all levels-analysis, design and implementation.
+        And in describing the problem itself.
+
+        design patterns can be derived from some basic strategies and principles.
+
+    From artificial intelligence to patterns to true object orientation
+
+    A note about conventions used in this book
+        first person voice
+        scanning text
+        code fragments
+        strategies and principles
+        show breadth and give a taste
+    feedback
+    acknowledgeMent
+
+chapter 1 the Object-Oriented paradigm
+
+    before the object-oriented paradigm: functional decomposition
+
+        functional decomposition can simplify complex problems, and it is so often and naturally used by us
+        that we don't consider other possibilities.
+
+        it can't deal with future changes.
+
+    the problem of requirements
+
+        requirements always change!
+
+        the users' view and developers' view and the developing environment are all possible to change.
+
+    Dealing with changes: using functional decomposition
+
+        functional decomposition's code are often low cohision and tight coupling.
+        changes to this kind of code result in unexpected side effects and we have to spend a lot of time
+        finding the bugs.
+
+    Dealing with changing requirements
+
+        example: let students to go their next class,and graduate students need to do more work than
+        undergraduate students.
+        shift responsibility
+
+        1. the people are responsible for themselves, the instructor don't need to control everything
+        2. the control program can talk to different different types of people as if they are the same.
+        3. the control promgram don't need to know specific steps people take.
+
+        three perspectives at software development process:
+            conceptual
+            specification
+            implementation
+        communicating at conceptual level while performing at implementation level is very powerful.
+        controller only knows what is conceptually happening other than what is exactly happening.
+
+    the object-oriented paradigm
+
+        normally,we get object by finding nouns in requirement and get methods by finding verbs.
+
+        An object is best regarded as something with responsibilities.
+        abstract classes are more than classes that can't be instantiated, it is a placeholder for
+        other classes at the conceptual level.
+
+        encapsulation is more than hiding data, it means any kind of hiding in general.Such as
+        the instructor don't know the student type is undergraduate or graduate.
+
+    object-oriented programming in action
+
+        advantages with encapsulation:
+            user don't need to worry about implementation
+            implementations can be changed without worrying about caller
+            the inside of object are unknown to outside objects using its interface
+
+        For change's side effects problem with the above functional decomposition's changing code,
+        object can only be changed by calling its own method, its data and implementation detail are
+        shielded from other object's change by encapsulation.
+        On the other hand, internal changes made to the object are transparent to other objects as well.
+
+    special object methods
+
+        constructor and destructor
+
+    summary
+
+chapter 2 the UML - the unified modeling language
+
+    overview
+    What is the UML?
+        mainly use Interaction Diagram(sequence diagram), class diagrams, state diagrams
+    why use the UML?
+        for communication, clarity, precision
+    the class diagram
+        s
+
