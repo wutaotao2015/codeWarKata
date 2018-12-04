@@ -51,9 +51,9 @@ chapter 1 the Object-Oriented paradigm
         undergraduate students.
         shift responsibility
 
-        1. the people are responsible for themselves, the instructor don't need to control everything
-        2. the control program can talk to different different types of people as if they are the same.
-        3. the control promgram don't need to know specific steps people take.
+        1. the students are responsible for themselves, the instructor don't need to control everything
+        2. the control program can talk to different types of students as if they are the same.
+        3. the control promgram don't need to know specific steps students take.
 
         three perspectives at software development process:
             conceptual
@@ -99,5 +99,43 @@ chapter 2 the UML - the unified modeling language
     why use the UML?
         for communication, clarity, precision
     the class diagram
-        s
+        public +
+        protected #
+        private -
 
+        class name is italicized means it is an abstract one
+        using open (unfilled) diamond to show aggregation relationship
+        using filled diamond to show composition relationship
+        using a dashed line with an arrow to show a 'use' or dependency relationship
+
+        the note in UML
+        cardinality: the number of objects contained or be contained
+
+    interaction diagram
+
+        the object instantiation and messages conveyed between them
+
+    summary
+        we can use note to clarify
+
+chapter 3 a problem that cries out for flexible code
+
+    overview
+    extracting information from a CAD/CAM system
+        expert system are more complex and longer than CAD/CAM system, so the extracting-information
+        tool need to be flexible enough for future CAD/CAM system's changes.
+    understand the vocabulary
+        slot, hole, cutout, special, irregular
+        geometry, part, dataset or model, NC machine and NC set(numerically controlled)
+    describe the problem
+        the features need to be made in right order to make the right part, and this
+        order is made by expert system.
+    the essential challenges and approaches
+        the expert system don't need to know the version of CAD/CAM, and changing CAD's version won't
+        need to change the expert system's code.
+    summary
+        we want to communicate with different implementations in the same way.
+
+chapter 4 A standard object-oriented solution
+
+    s
