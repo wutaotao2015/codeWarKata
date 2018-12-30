@@ -138,4 +138,87 @@ chapter 3 a problem that cries out for flexible code
 
 chapter 4 A standard object-oriented solution
 
-    s
+    overview
+    solving with special cases
+        each feature has a V1 model and a V2 model
+    summary
+
+chapter 5 an introduction to design patterns
+
+    overview
+    design patterns arose from architecture and anthropology
+        how to desin a great backyard
+    moving from architectural to software design patterns
+    why study design patterns
+        reuse solutions
+        establish common terminology
+        gives a higher-level perspective, avoid dealing with details too early
+    other advantages to studying design patterns
+        design to interfaces
+        favor composition over inheritance
+        find what varies and encapsulate it
+    summary
+
+chapter 6 the facade pattern
+
+    overview
+    introducing the facade pattern
+        a new way or a special way to interact with the system
+    learning the facade pattern
+        presents a new interface for the clients to use the subsystem.
+        consequences: simplified the use of the system, but it only contains part of the system, certain
+        functionality may be unavailable.
+    field notes: the facade pattern
+        we can create this easy new interface because we don't need to use all of the functions
+        patterns set a general approach,it's blueprints to get started
+        the facade can also be used to hide or encapsulate the old system:
+            1. track system usage
+            2. swap out systems
+    relating the facade pattern to the CAD/CAM problem
+        for V1Slot, V1Holes using V1 system, we need to use facade to simplify the usage from its complex
+        implementation.
+    summary
+        the facade pattern applies when:
+            you don't need all of the functionality of the complex system
+            you want to hide or encapsulate the original system
+            you want to use the original system and add some new functionality as well
+            the cost of writing this new class is less than learning the original system or maintaining it
+chapter 7 the adapter pattern
+    overview
+    introducing the adapter pattern
+        create a new interface for a object which does the right thing but has a wrong interface
+    learning the adapter pattern
+        by containing the needed class in our new class we can implement the polymorphism as we like.
+        the adapter provides a wrapper with the desired interface
+        consequeces: allows preexisting objects to fit into new system without the limits of its own interfaces.
+    field notes: the adapter pattern
+        if the existed object don't have all the functionality we need, we can do it in the wrapper class.
+        Object adapter pattern
+            one object containing another
+        class adapter pattern
+            with multiple inheritance
+
+        the differences between facade and adapter
+            1. they both have preexisting classes
+            2. facade don't need to design to specific interface, and adapter must do.
+            3. facade don't need to behave polymorphically, while adapter probably do.
+            4. facade need to get a simpler interface, and adapter don't need to.
+
+        bottom line: A facade simplifies an interface while an adapter converts the interface(new) into
+        a preexisting interface(old).
+    relating the adapter pattern to the CAD/CAM problem
+        for V2 system, many features don't have the needed interfaces, so we can use adapter to get
+        the interface we needed through the newly created OOGFeature object.
+    summary
+        adapter pattern is implemented by creating a new class with desired interface and wrapped the
+        original class to do what we actually need to do.
+
+chapter 8 expanding our horizons
+
+    overview
+    objects: the traditional view and the new view
+        an object is an entity that has responsibilities
+    encapsulation:
+        encapsulation should be thought as any kind of hiding
+    find what is varying and encapsulate it
+
