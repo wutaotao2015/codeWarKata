@@ -206,6 +206,28 @@ chapter 3 a problem that cries out for flexible code
         need to change the expert system's code.
     summary
         we want to communicate with different implementations in the same way.
+    简答题：
+    1. 金属板材有哪5个部件?
+        沟槽slot,孔hole,方切口cutout,特殊形状special,不规则irregular
+    2. 第1版和第2版的区别
+        1是面向过程，通过多个调用得到需要的模型参数，2是面向对象的思路，将不同特征的部件分为多个对象
+    阐述题
+    1. CAD/CAM问题的核心困难是什么？
+        面对现有和将出现的不同版本的CAD/CAM系统，由于模型不能在不同版本间迁移，需要开发出能适应不同版本CAD同时以后专家系统不用维护的主程序
+        其中CAD的1版是面向过程的，而2版是面向对象的，这需要在专家系统中使用的CAD有一个统一的接口进行抽象，
+        主要问题在于抽象的部分和方式，接口的具体实现需要在主程序中进行处理。
+    2. 为什么多态性在几何特征提取一层是必须的，而部件一层不需要
+        因为专家系统不关心几何特征提取过程的细节，所以可以将提取过程抽象成抽象类或接口，但它需要具体的部件信息进行内部处理
+    观点与应用题
+    花了不少时间介绍CAM问题的术语
+    1. 为什么这么做
+        了解问题的背景，才能真正理解问题
+    2. 有必要么
+        有
+    3. 理解用户的术语重要么
+        重要，只有理解了业务需求，才能开发出客户真正需要的产品
+    4. 记录用户术语体系最有效的方法是什么
+        理解基本术语，在交流中记录下所用术语
 
 chapter 4 A standard object-oriented solution
 
@@ -213,9 +235,30 @@ chapter 4 A standard object-oriented solution
     solving with special cases
         each feature has a V1 model and a V2 model
     summary
-
+    简答题
+    1. uml元素
+    2. CAD/CAM程序的基本能力是什么
+        可以提供api接口以获取模型上所有部件的几何信息，无论是通过什么方式
+    3. 初步的解决方案存在4个问题，它们是什么
+        1. 不同部件间方法处理类似，相似性高
+        2. 紧耦合，同一个模型的部件在不同的类中，当更换CAD版本时，需要全部修改
+        3. 低内聚，获取部件几何信息的核心处理逻辑分布在不同的部件类中，即由model类来获取所有部件特征信息的处理在不同的model类中
+        4. 目前由部件类型和CAD版本的变化2个因素导致了很多类的出现，如果出现第3个维度的变化因素，这种方式需要的类会更多
+    阐述题
+    描述初步解决方案，你认为这是合理的初步解决方案么
+        该方案将模型封装为model抽象类，抽象类中提供了统一的接口可供专家系统调用，model根据CAD版本目前有2个实现，
+        不同的model实现类中对于不同版本的CAD软件有不同的调用方式，为了专家系统使用，最后得到的结果也是相同的，
+        即模型中所有部件的几何特征信息。为了达到这个目的，不同的部件也是继承了同一个抽象类Feature,派生出不同部件以满足要求，如SlotFeature,
+        HoleFeature,每个部件下又按CAD版本类型派生出不同版本的部件实现类，如V1Slot,V2Slot等，版本和部件类型2个变量在这些最低层的类
+        中得到控制，最终也是从这些底层类中得到具体的几何特征信息。
+        作为初步解决问题，该方案是可以的
+    观点与应用题
+    1. 尽可能晚地深入细节，你同意么，为什么
+        同意，在做设计时，应考虑大的方向和矛盾之处，结合多方面因素做出平衡的设计
+        过早深入细节会影响到整体设计，具体的细节可以在大框架确定后再按情况进行改动，反过来就是舍本逐末。
+    2. 对于分析和程序员，凭直觉做事合适么
+        在设计的时候，可以利用一下，因为如果觉得变扭，还有可能是因为设计不够清晰和简单，有可以简化的地方
 chapter 5 an introduction to design patterns
-
     overview
     design patterns arose from architecture and anthropology
         how to design a great backyard
