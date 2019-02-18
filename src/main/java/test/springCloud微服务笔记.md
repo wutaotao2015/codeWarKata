@@ -17,5 +17,27 @@ springboot使用条件化bean的方法判断classpath中是否有相应的jar包
 classpath中有springMVC(由webStarter依赖而来),它会自动配置dispatcherServlet并启用springMVC;
 classpath中有tomcat(webStarter依赖而来),它会自动启动一个tomcat容器。
 
+如果想要自定义配置，可以显式自己的spring配置，或通过环境变量，属性文件等进行调整。
+
 #### Actuator监控工具
+略
 #### 命令行工具
+略
+
+### springCloud微服务
+
+#### 总体架构
+
+#### 服务注册中心Eureka
+
+#### 负载均衡ribbon
+
+#### 请求客户端Feign
+
+#### 容错处理-断路器hystrix
+
+#### 网关处理zuul
+
+#### 配置服务器spring cloud config
+
+#### 微服务跟踪spring cloud sleuth
